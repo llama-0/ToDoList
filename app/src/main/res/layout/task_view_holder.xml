@@ -17,8 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_normal_16"
             android:layout_marginTop="@dimen/spacing_normal_16"
-            android:layout_marginBottom="@dimen/spacing_normal_16"
-            android:text="@string/action_add_task" />
+            android:layout_marginBottom="@dimen/spacing_normal_16" />
 
     </LinearLayout>
 </LinearLayout>
