@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">TODO</string>
+    <string name="res_addTask">Add</string>
+    <string name="action_add_task">Add</string>
+    <string name="hint_add_task">you can type here ...</string>
+    <string name="message_empty_string">List is empty</string>
+</resources>
