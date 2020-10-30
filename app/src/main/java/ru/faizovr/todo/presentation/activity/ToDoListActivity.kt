@@ -69,20 +69,25 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
         emptyTextView = findViewById(R.id.text_empty)
         recyclerView = findViewById(R.id.lists_recycler_view)
 
-        buttonAdd?.isClickable = editTextAdd?.text!!.isNotEmpty()
+        val editTextString = editTextAdd?.text
+        if (editTextString != null) {
+            buttonAdd?.isClickable = editTextString.isNotEmpty()
+        } else {
+            throw java.lang.NullPointerException()
+        }
+
         editTextAdd?.addTextChangedListener {
-            buttonAdd?.isClickable = editTextAdd?.text!!.isNotEmpty()
+            buttonAdd?.isClickable = editTextString.isNotEmpty()
         }
 
         buttonAdd?.setOnClickListener {
-            taskListPresenter?.addTaskToList(editTextAdd?.text.toString())
-            editTextAdd?.text!!.clear()
+            taskListPresenter?.addTaskToList(editTextString.toString())
+            editTextAdd?.text?.clear()
         }
 
-        recyclerViewAdapter =
-            ListRecyclerViewAdapter(
-                taskListPresenter?.getList()!!
-            )
+        val list: List<Task>? = taskListPresenter?.getList()
+
+        recyclerViewAdapter = ListRecyclerViewAdapter(taskListPresenter?.getList()!!)
         recyclerView?.adapter = recyclerViewAdapter
         recyclerView?.layoutManager = LinearLayoutManager(this)
     }

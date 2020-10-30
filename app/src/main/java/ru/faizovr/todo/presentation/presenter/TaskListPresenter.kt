@@ -25,6 +25,4 @@ class TaskListPresenter (private var viewInterface: TaskListContract.ViewInterfa
         model.addTask(Task(message))
         showContent()
     }
-
-    override fun getMyModel(): Model = model
 }

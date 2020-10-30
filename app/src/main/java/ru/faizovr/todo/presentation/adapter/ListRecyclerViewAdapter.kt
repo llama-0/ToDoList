@@ -7,7 +7,7 @@ import ru.faizovr.todo.R
 import ru.faizovr.todo.data.Task
 import ru.faizovr.todo.presentation.viewholder.TaskViewHolder
 
-class ListRecyclerViewAdapter(var taskList: List<Task>):
+class ListRecyclerViewAdapter(var taskList: List<Task>?):
     RecyclerView.Adapter<TaskViewHolder>() {
 
     private val TAG = "ListRecyclerViewAdapter"
@@ -20,9 +20,20 @@ class ListRecyclerViewAdapter(var taskList: List<Task>):
         )
     }
 
-    override fun getItemCount(): Int = taskList.size
+    override fun getItemCount(): Int {
+        if (taskList != null) {
+            return taskList!!.size
+        } else {
+            return 0
+        }
+    }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        holder.taskTextView.text = taskList[position].message
+        val task: Task? = taskList?.get(position)
+        if (task != null) {
+            holder.taskTextView.text = task.message
+        } else {
+            throw NullPointerException()
+        }
     }
 }
