@@ -7,11 +7,14 @@ interface TaskListContract {
     interface ViewInterface {
         fun displayList(taskList: List<Task>)
         fun displayNoList()
+        fun changeButtonClickable(isStringEmpty: Boolean)
+        fun clearEditText()
     }
 
     interface PresenterInterface {
         fun init()
-        fun addTaskToList(message: String)
+        fun buttonAddTaskClicked(message: String)
+        fun textChanged(string: String)
         fun getList(): List<Task>
     }
 }

@@ -13,16 +13,20 @@ class TaskListPresenter (private var viewInterface: TaskListContract.ViewInterfa
 
     override fun init() = showContent()
 
+    override fun buttonAddTaskClicked(message: String) {
+        model.addTask(Task(message))
+        viewInterface.clearEditText()
+        viewInterface.changeButtonClickable(false)
+        showContent()
+    }
+
+    override fun textChanged(string: String) = viewInterface.changeButtonClickable(string.isNotEmpty())
+
     fun showContent() {
         val taskList = model.getMyList()
         if (taskList.isEmpty())
             viewInterface.displayNoList()
         else
             viewInterface.displayList(taskList)
-    }
-
-    override fun addTaskToList(message: String) {
-        model.addTask(Task(message))
-        showContent()
     }
 }

@@ -5,10 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.*
-import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.faizovr.todo.ToDoApplication
 import ru.faizovr.todo.R
@@ -58,14 +55,12 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                button_addTask.isClickable = edit_text_add.text.isNotEmpty()
+                taskListPresenter?.textChanged(edit_text_add.text.toString())
             }
         })
 
         button_addTask?.setOnClickListener {
-            taskListPresenter?.addTaskToList(edit_text_add.text.toString())
-            edit_text_add.text.clear()
-            button_addTask.isClickable = false
+            taskListPresenter?.buttonAddTaskClicked(edit_text_add.text.toString())
         }
 
         button_addTask.isClickable = edit_text_add.text.toString().isNotEmpty()
@@ -74,6 +69,11 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
         lists_recycler_view.layoutManager = LinearLayoutManager(this)
     }
 
+    override fun clearEditText() = edit_text_add.text.clear()
+
+    override fun changeButtonClickable(isStringEmpty: Boolean) {
+        button_addTask.isClickable = isStringEmpty
+    }
 
     override fun displayList(taskList: List<Task>) {
         val recyclerViewAdapter = lists_recycler_view.adapter as ListRecyclerViewAdapter
