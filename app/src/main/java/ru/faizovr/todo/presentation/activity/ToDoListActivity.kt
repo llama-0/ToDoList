@@ -23,11 +23,6 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
     private val TAG = "MainActivity"
 
     private var taskListPresenter: TaskListContract.PresenterInterface? = null
-    private var recyclerViewAdapter: ListRecyclerViewAdapter? = null
-    private var recyclerView: RecyclerView? = null
-    private var editTextAdd: EditText? = null
-    private var buttonAdd: Button? = null
-    private var emptyTextView: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,17 +37,7 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
 
     override fun onDestroy() {
         super.onDestroy()
-        destroyViews()
         destroyPresenter()
-    }
-
-    private fun destroyViews() {
-        editTextAdd = null
-        recyclerViewAdapter = null
-        recyclerView?.layoutManager = null
-        recyclerView = null
-        buttonAdd = null
-        emptyTextView = null
     }
 
     private fun destroyPresenter() {
@@ -67,45 +52,40 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
     }
 
     private fun setupViews() {
-        editTextAdd = findViewById(R.id.edit_text_add)
-        buttonAdd = findViewById(R.id.button_addTask)
-        emptyTextView = findViewById(R.id.text_empty)
-        recyclerView = findViewById(R.id.lists_recycler_view)
-
-        editTextAdd?.addTextChangedListener(object: TextWatcher {
+        edit_text_add.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                buttonAdd?.isClickable = editTextAdd?.text.toString().isNotEmpty()
+                button_addTask.isClickable = edit_text_add.text.isNotEmpty()
             }
         })
 
-        buttonAdd?.setOnClickListener {
-            taskListPresenter?.addTaskToList(editTextAdd?.text.toString())
-            editTextAdd?.text?.clear()
-            buttonAdd?.isClickable = false
+        button_addTask?.setOnClickListener {
+            taskListPresenter?.addTaskToList(edit_text_add.text.toString())
+            edit_text_add.text.clear()
+            button_addTask.isClickable = false
         }
 
-        buttonAdd?.isClickable = editTextAdd?.text.toString().isNotEmpty()
+        button_addTask.isClickable = edit_text_add.text.toString().isNotEmpty()
 
-        recyclerViewAdapter = ListRecyclerViewAdapter(taskListPresenter?.getList())
-        recyclerView?.adapter = recyclerViewAdapter
-        recyclerView?.layoutManager = LinearLayoutManager(this)
+        lists_recycler_view.adapter = ListRecyclerViewAdapter(taskListPresenter?.getList())
+        lists_recycler_view.layoutManager = LinearLayoutManager(this)
     }
 
 
     override fun displayList(taskList: List<Task>) {
-        recyclerViewAdapter?.taskList = taskList
-        recyclerViewAdapter?.notifyDataSetChanged()
+        val recyclerViewAdapter = lists_recycler_view.adapter as ListRecyclerViewAdapter
+        recyclerViewAdapter.taskList = taskList
+        recyclerViewAdapter.notifyDataSetChanged()
 
-        recyclerView?.visibility = View.VISIBLE
-        emptyTextView?.visibility = View.GONE
+        lists_recycler_view.visibility = View.VISIBLE
+        text_empty.visibility = View.GONE
     }
 
     override fun displayNoList() {
-        recyclerView?.visibility = View.GONE
-        emptyTextView?.visibility = View.VISIBLE
+        lists_recycler_view.visibility = View.GONE
+        text_empty.visibility = View.VISIBLE
     }
 }
