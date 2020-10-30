@@ -1,14 +1,15 @@
 package ru.faizovr.todo.presentation.activity
 
 import android.app.Activity
-import ru.faizovr.todo.ToDoApplication
 import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ru.faizovr.todo.ToDoApplication
 import ru.faizovr.todo.R
+import ru.faizovr.todo.data.Model
 import ru.faizovr.todo.presentation.adapter.ListRecyclerViewAdapter
 import ru.faizovr.todo.data.Task
 import ru.faizovr.todo.presentation.TaskListContract
@@ -25,15 +26,13 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
     private var buttonAdd: Button? = null
     private var emptyTextView: TextView? = null
 
-    private var app: ToDoApplication? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        app = application as ToDoApplication
+        val app = application as ToDoApplication
 
-        setupPresenter()
+        setupPresenter(app.model)
         setupViews()
         taskListPresenter?.init()
     }
@@ -42,11 +41,6 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
         super.onDestroy()
         destroyViews()
         destroyPresenter()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        app?.model = taskListPresenter?.getMyModel()
     }
 
     private fun destroyViews() {
@@ -62,8 +56,11 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
         taskListPresenter = null
     }
 
-    private fun setupPresenter() {
-        taskListPresenter = TaskListPresenter(this, app?.model!!)
+    private fun setupPresenter(model: Model?) {
+        if (model != null)
+            taskListPresenter = TaskListPresenter(this, model)
+        else
+            throw NullPointerException()
     }
 
     private fun setupViews() {
@@ -84,7 +81,7 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
 
         recyclerViewAdapter =
             ListRecyclerViewAdapter(
-                taskListPresenter?.getMyList()!!
+                taskListPresenter?.getList()!!
             )
         recyclerView?.adapter = recyclerViewAdapter
         recyclerView?.layoutManager = LinearLayoutManager(this)

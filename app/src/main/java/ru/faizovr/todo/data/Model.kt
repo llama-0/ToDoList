@@ -1,3 +1,9 @@
 package ru.faizovr.todo.data
 
-data class Model(val taskList: MutableList<Task>)
+class Model {
+    private val taskList: MutableList<Task> = mutableListOf()
+
+    fun getMyList(): List<Task> = taskList
+
+    fun addTask(task: Task) = taskList.add(task)
+}

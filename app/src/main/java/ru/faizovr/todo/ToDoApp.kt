@@ -13,6 +13,6 @@ class ToDoApplication: Application() {
     }
 
     private fun setupModel() {
-        model = Model(mutableListOf())
+        model = Model()
     }
 }

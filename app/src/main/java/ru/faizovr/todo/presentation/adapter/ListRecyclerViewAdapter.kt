@@ -1,9 +1,7 @@
 package ru.faizovr.todo.presentation.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ru.faizovr.todo.R
 import ru.faizovr.todo.data.Task

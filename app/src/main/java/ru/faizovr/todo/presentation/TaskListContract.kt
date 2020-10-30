@@ -11,9 +11,9 @@ interface TaskListContract {
     }
 
     interface PresenterInterface {
-        fun getMyList(): List<Task>
         fun init()
         fun addTaskToList(message: String)
         fun getMyModel(): Model
+        fun getList(): List<Task>
     }
 }

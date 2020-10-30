@@ -9,20 +9,21 @@ class TaskListPresenter (private var viewInterface: TaskListContract.ViewInterfa
 
     private val TAG = "MainPresenter"
 
-    override fun getMyList(): List<Task> {
-        return model.taskList
-    }
+    override fun getList(): List<Task> = model.getMyList()
 
-    override fun init() {
-        if (model.taskList.isEmpty())
+    override fun init() = showContent()
+
+    fun showContent() {
+        val taskList = model.getMyList()
+        if (taskList.isEmpty())
             viewInterface.displayNoList()
         else
-            viewInterface.displayList(model.taskList)
+            viewInterface.displayList(taskList)
     }
 
     override fun addTaskToList(message: String) {
-        model.taskList.add(Task(message))
-        init()
+        model.addTask(Task(message))
+        showContent()
     }
 
     override fun getMyModel(): Model = model
