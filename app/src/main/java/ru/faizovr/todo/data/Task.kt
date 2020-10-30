@@ -1,3 +1,3 @@
-package ru.faizovr.todo.model
+package ru.faizovr.todo.data
 
 data class Task(val message: String)
