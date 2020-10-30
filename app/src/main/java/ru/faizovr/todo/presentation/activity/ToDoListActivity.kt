@@ -2,11 +2,14 @@ package ru.faizovr.todo.presentation.activity
 
 import android.app.Activity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.*
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.activity_main.*
 import ru.faizovr.todo.ToDoApplication
 import ru.faizovr.todo.R
 import ru.faizovr.todo.data.Model
@@ -69,28 +72,29 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
         emptyTextView = findViewById(R.id.text_empty)
         recyclerView = findViewById(R.id.lists_recycler_view)
 
-        val editTextString = editTextAdd?.text
-        if (editTextString != null) {
-            buttonAdd?.isClickable = editTextString.isNotEmpty()
-        } else {
-            throw java.lang.NullPointerException()
-        }
+        editTextAdd?.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {}
 
-        editTextAdd?.addTextChangedListener {
-            buttonAdd?.isClickable = editTextString.isNotEmpty()
-        }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                buttonAdd?.isClickable = editTextAdd?.text.toString().isNotEmpty()
+            }
+        })
 
         buttonAdd?.setOnClickListener {
-            taskListPresenter?.addTaskToList(editTextString.toString())
+            taskListPresenter?.addTaskToList(editTextAdd?.text.toString())
             editTextAdd?.text?.clear()
+            buttonAdd?.isClickable = false
         }
 
-        val list: List<Task>? = taskListPresenter?.getList()
+        buttonAdd?.isClickable = editTextAdd?.text.toString().isNotEmpty()
 
-        recyclerViewAdapter = ListRecyclerViewAdapter(taskListPresenter?.getList()!!)
+        recyclerViewAdapter = ListRecyclerViewAdapter(taskListPresenter?.getList())
         recyclerView?.adapter = recyclerViewAdapter
         recyclerView?.layoutManager = LinearLayoutManager(this)
     }
+
 
     override fun displayList(taskList: List<Task>) {
         recyclerViewAdapter?.taskList = taskList
