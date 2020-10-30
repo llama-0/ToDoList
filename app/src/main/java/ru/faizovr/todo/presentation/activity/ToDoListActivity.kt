@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.faizovr.todo.ToDoApplication
 import ru.faizovr.todo.R
@@ -49,6 +51,7 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
     }
 
     private fun setupViews() {
+
         edit_text_add.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
 
@@ -67,6 +70,21 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
 
         lists_recycler_view.adapter = ListRecyclerViewAdapter(taskListPresenter?.getList())
         lists_recycler_view.layoutManager = LinearLayoutManager(this)
+
+        ItemTouchHelper(object: ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false;
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                taskListPresenter?.listItemSwapped(viewHolder.adapterPosition)
+            }
+
+        }).attachToRecyclerView(lists_recycler_view)
     }
 
     override fun clearEditText() = edit_text_add.text.clear()

@@ -13,6 +13,7 @@ interface TaskListContract {
 
     interface PresenterInterface {
         fun init()
+        fun listItemSwapped(position: Int)
         fun buttonAddTaskClicked(message: String)
         fun textChanged(string: String)
         fun getList(): List<Task>

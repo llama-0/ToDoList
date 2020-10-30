@@ -4,7 +4,7 @@ import ru.faizovr.todo.data.Model
 import ru.faizovr.todo.data.Task
 import ru.faizovr.todo.presentation.TaskListContract
 
-class TaskListPresenter (private var viewInterface: TaskListContract.ViewInterface, val model: Model )
+class TaskListPresenter (private var viewInterface: TaskListContract.ViewInterface, val model: Model)
     : TaskListContract.PresenterInterface {
 
     private val TAG = "MainPresenter"
@@ -12,6 +12,11 @@ class TaskListPresenter (private var viewInterface: TaskListContract.ViewInterfa
     override fun getList(): List<Task> = model.getMyList()
 
     override fun init() = showContent()
+
+    override fun listItemSwapped(position: Int) {
+        model.deleteTask(position)
+        showContent()
+    }
 
     override fun buttonAddTaskClicked(message: String) {
         model.addTask(Task(message))
