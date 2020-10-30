@@ -71,8 +71,8 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
 
     override fun clearEditText() = edit_text_add.text.clear()
 
-    override fun changeButtonClickable(isStringEmpty: Boolean) {
-        button_addTask.isClickable = isStringEmpty
+    override fun changeButtonClickable(isClickable: Boolean) {
+        button_addTask.isClickable = isClickable
     }
 
     override fun displayList(taskList: List<Task>) {

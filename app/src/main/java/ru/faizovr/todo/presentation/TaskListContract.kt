@@ -7,7 +7,7 @@ interface TaskListContract {
     interface ViewInterface {
         fun displayList(taskList: List<Task>)
         fun displayNoList()
-        fun changeButtonClickable(isStringEmpty: Boolean)
+        fun changeButtonClickable(isClickable: Boolean)
         fun clearEditText()
     }
 
