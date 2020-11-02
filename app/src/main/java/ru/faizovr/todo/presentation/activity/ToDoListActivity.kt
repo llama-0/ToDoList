@@ -17,6 +17,7 @@ import ru.faizovr.todo.presentation.adapter.ListRecyclerViewAdapter
 import ru.faizovr.todo.data.Task
 import ru.faizovr.todo.presentation.TaskListContract
 import ru.faizovr.todo.presentation.presenter.TaskListPresenter
+
 class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
 
     private var taskListPresenter: TaskListContract.PresenterInterface? = null
@@ -29,10 +30,6 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
 
         setupViews()
         setupPresenter(app.model)
-
-
-        lists_recycler_view.adapter = ListRecyclerViewAdapter(taskListPresenter!!.getList())
-        lists_recycler_view.layoutManager = LinearLayoutManager(this)
     }
 
     override fun onDestroy() {
@@ -57,8 +54,10 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
             taskListPresenter?.buttonAddTaskClicked(edit_text_add.text.toString())
         }
 
-
         ItemTouchHelper(ItemListTouchHelper()).attachToRecyclerView(lists_recycler_view)
+
+        lists_recycler_view.adapter = ListRecyclerViewAdapter()
+        lists_recycler_view.layoutManager = LinearLayoutManager(this)
     }
 
     override fun clearEditText() {
@@ -83,11 +82,9 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
         }
     }
 
-    override fun displayList(taskList: List<Task>) {
+    override fun updateList(taskList: List<Task>) {
         val adapter: ListRecyclerViewAdapter = lists_recycler_view.adapter as ListRecyclerViewAdapter
         adapter.updateList(taskList)
-
-        Log.d(TAG, "displayList: UPDATE")
     }
 
     companion object {
@@ -115,7 +112,7 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            taskListPresenter?.listItemSwapped(viewHolder.adapterPosition)
+            taskListPresenter?.listItemSwipped(viewHolder.adapterPosition)
         }
 
     }

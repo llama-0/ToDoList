@@ -7,26 +7,28 @@ import ru.faizovr.todo.presentation.TaskListContract
 class TaskListPresenter (private var viewInterface: TaskListContract.ViewInterface, private val model: Model)
     : TaskListContract.PresenterInterface {
 
+    private var editTextString: String = ""
+
     override fun init() = showContent()
 
-    override fun listItemSwapped(position: Int) {
+    override fun listItemSwipped(position: Int) {
         model.deleteTask(position)
-        viewInterface.changeButtonClickable(false)
+        viewInterface.changeButtonClickable(editTextString.isNotEmpty())
         showContent()
     }
 
     override fun buttonAddTaskClicked(message: String) {
         model.addTask(Task(message))
+        editTextString = ""
         viewInterface.clearEditText()
         viewInterface.changeButtonClickable(false)
         showContent()
     }
 
     override fun textChanged(string: String) {
+        editTextString = string
         viewInterface.changeButtonClickable(string.isNotEmpty())
     }
-
-    override fun getList(): List<Task> = model.getMyList()
 
     private fun showContent() {
         val taskList = model.getMyList()
@@ -37,7 +39,7 @@ class TaskListPresenter (private var viewInterface: TaskListContract.ViewInterfa
         else {
             viewInterface.changeEmptyTextMessageVisibility(false)
             viewInterface.changeListVisibility(true)
-            viewInterface.displayList(taskList)
+            viewInterface.updateList(taskList)
         }
     }
 
