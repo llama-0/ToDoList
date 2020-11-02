@@ -5,7 +5,15 @@ class Model {
 
     fun getMyList(): List<Task> = taskList
 
-    fun addTask(task: Task) = taskList.add(task)
+    fun addTask(task: Task) : Boolean = taskList.add(task)
 
-    fun deleteTask(position: Int) = taskList.removeAt(position)
+    fun deleteTask(task: Task) {
+        taskList.remove(task)
+    }
+
+    fun changeTaskState(task: Task, taskState: TaskState) {
+        task.taskState = taskState
+    }
+
+    fun isContain(task: Task) : Boolean = taskList.contains(task)
 }

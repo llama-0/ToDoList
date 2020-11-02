@@ -1,6 +1,5 @@
 package ru.faizovr.todo.presentation.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -9,7 +8,7 @@ import ru.faizovr.todo.R
 import ru.faizovr.todo.data.Task
 import ru.faizovr.todo.presentation.viewholder.TaskViewHolder
 
-class ListRecyclerViewAdapter():
+class ListRecyclerViewAdapter(private val onEditButtonClickListener: (task: Task) -> Unit):
     RecyclerView.Adapter<TaskViewHolder>() {
 
     private val taskList: ArrayList<Task> = arrayListOf()
@@ -23,18 +22,21 @@ class ListRecyclerViewAdapter():
     fun updateList(newList: List<Task>) {
         val diffResult = DiffUtil.calculateDiff(ListDiffUtilCallback(taskList, newList))
         taskList.clear()
-        taskList.addAll(newList)
+        taskList.addAll(newList.toSet())
         diffResult.dispatchUpdatesTo(this)
+//        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = taskList.size
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        Log.d(TAG, "onBindViewHolder: $position")
-        holder.bind(taskList[position])
+        holder.bind(taskList[position], onEditButtonClickListener)
     }
 
+    fun getTaskFromView(position: Int): Task = taskList[position]
+
     companion object {
+        @Suppress("unused")
         private const val TAG = "ListRecyclerViewAdapter"
     }
 }

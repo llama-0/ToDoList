@@ -9,13 +9,16 @@ interface TaskListContract {
         fun changeButtonClickable(isClickable: Boolean)
         fun changeListVisibility(isVisible: Boolean)
         fun changeEmptyTextMessageVisibility(isVisible: Boolean)
+        fun changeEditTextText(message: String)
+        fun changeAddButtonText(message: String)
         fun clearEditText()
     }
 
     interface PresenterInterface {
         fun init()
-        fun listItemSwipped(position: Int)
+        fun listItemSwiped(task: Task)
         fun buttonAddTaskClicked(message: String)
-        fun textChanged(string: String)
+        fun buttonEditTaskClicked(task: Task, saveString: String)
+        fun editTextTextChanged(string: String)
     }
 }

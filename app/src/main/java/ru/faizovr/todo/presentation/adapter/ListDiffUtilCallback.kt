@@ -11,15 +11,16 @@ class ListDiffUtilCallback(private val oldList: List<Task>, private val newList:
     override fun getNewListSize(): Int = newList.size
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        Log.d(TAG, "areItemsTheSame: oldList[oldItemPosition].id = ${oldList[oldItemPosition].id} newList[newItemPosition].id = ${newList[newItemPosition].id}")
         return oldList[oldItemPosition].id == newList[newItemPosition].id
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].message == newList[newItemPosition].message
+        Log.d(TAG, "areContentsTheSame: ${oldList[oldItemPosition].taskState} && ${newList[newItemPosition].taskState}")
+        return oldList[oldItemPosition] == newList[newItemPosition]
     }
 
     companion object {
+        @Suppress("unused")
         private const val TAG = "ListDiffUtilCallback"
     }
 

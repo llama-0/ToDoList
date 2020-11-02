@@ -4,7 +4,6 @@ import android.app.Activity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,7 +19,11 @@ import ru.faizovr.todo.presentation.presenter.TaskListPresenter
 
 class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
 
-    private var taskListPresenter: TaskListContract.PresenterInterface? = null
+    private lateinit var taskListPresenter: TaskListContract.PresenterInterface
+
+    private val onEditButtonClicked : (task: Task) -> Unit = {
+        taskListPresenter.buttonEditTaskClicked(it, edit_text_add.text.toString())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,18 +35,9 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
         setupPresenter(app.model)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        destroyPresenter()
-    }
-
-    private fun destroyPresenter() {
-        taskListPresenter = null
-    }
-
     private fun setupPresenter(model: Model) {
         taskListPresenter = TaskListPresenter(this, model)
-        taskListPresenter?.init()
+        taskListPresenter.init()
     }
 
     private fun setupViews() {
@@ -51,12 +45,12 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
         edit_text_add.addTextChangedListener(MyTextWatcher())
 
         button_addTask?.setOnClickListener {
-            taskListPresenter?.buttonAddTaskClicked(edit_text_add.text.toString())
+            taskListPresenter.buttonAddTaskClicked(edit_text_add.text.toString())
         }
 
         ItemTouchHelper(ItemListTouchHelper()).attachToRecyclerView(lists_recycler_view)
 
-        lists_recycler_view.adapter = ListRecyclerViewAdapter()
+        lists_recycler_view.adapter = ListRecyclerViewAdapter(onEditButtonClicked)
         lists_recycler_view.layoutManager = LinearLayoutManager(this)
     }
 
@@ -82,6 +76,24 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
         }
     }
 
+    override fun changeEditTextText(message: String) {
+        edit_text_add.setText(message)
+    }
+
+    override fun changeAddButtonText(message: String) {
+        button_addTask.text = message
+    }
+
+/*
+    fun changeIconEditButton(buttonState: ButtonState) {
+        if (buttonState == ButtonState.ADD) {
+            button_edit_task.setImageResource(R.drawable.ic_round_edit_48)
+        } else {
+            button_edit_task.setImageResource(R.drawable.ic_round_close_48)
+        }
+    }
+*/
+
     override fun updateList(taskList: List<Task>) {
         val adapter: ListRecyclerViewAdapter = lists_recycler_view.adapter as ListRecyclerViewAdapter
         adapter.updateList(taskList)
@@ -98,7 +110,7 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            taskListPresenter?.textChanged(s.toString())
+            taskListPresenter.editTextTextChanged(s.toString())
         }
     }
 
@@ -112,9 +124,9 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            taskListPresenter?.listItemSwipped(viewHolder.adapterPosition)
-        }
-
+            val listRecyclerViewAdapter = lists_recycler_view.adapter as ListRecyclerViewAdapter
+            taskListPresenter.listItemSwiped(listRecyclerViewAdapter.getTaskFromView(viewHolder.adapterPosition))
+        }   
     }
 }
 
