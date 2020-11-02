@@ -5,7 +5,8 @@ import ru.faizovr.todo.data.Model
 
 class ToDoApplication: Application() {
 
-    var model: Model? = null
+    lateinit var model: Model
+    private set
 
     override fun onCreate() {
         super.onCreate()

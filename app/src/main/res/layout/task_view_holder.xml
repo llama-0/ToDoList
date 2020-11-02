@@ -7,10 +7,18 @@
     android:layout_marginBottom="@dimen/spacing_tiny_4">
 
     <TextView
-        android:id="@+id/text_task"
-        android:layout_width="match_parent"
+        android:id="@+id/text_id"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/spacing_normal_16"
+        android:layout_marginEnd="@dimen/spacing_normal_16"
+        android:layout_marginTop="@dimen/spacing_normal_16"
+        android:layout_marginStart="@dimen/spacing_normal_16"/>
+
+    <TextView
+        android:id="@+id/text_task"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
         android:layout_marginTop="@dimen/spacing_normal_16"
         android:layout_marginBottom="@dimen/spacing_normal_16" />
 
