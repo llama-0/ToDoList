@@ -21,6 +21,7 @@ class ListRecyclerViewAdapter(var taskList: List<Task>):
 
     fun updateList(newList: List<Task>) {
         val diffResult = DiffUtil.calculateDiff(ListDiffUtilCallback(taskList, newList))
+        taskList = newList
         diffResult.dispatchUpdatesTo(this)
     }
 
