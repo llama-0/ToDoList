@@ -5,15 +5,25 @@ class Model {
 
     fun getMyList(): List<Task> = taskList
 
-    fun addTask(task: Task) : Boolean = taskList.add(task)
+    fun addTask(message: String) {
+        val newTask = Task(id, message)
+        id++
+        taskList.add(newTask)
+    }
+
+    fun swapTask(task: Task, toPosition: Int) {
+        val taskPosition = taskList.indexOf(task)
+        taskList[taskPosition] = taskList[toPosition]
+        taskList[toPosition] = task
+    }
 
     fun deleteTask(task: Task) {
         taskList.remove(task)
     }
 
-    fun changeTaskState(task: Task, taskState: TaskState) {
-        task.taskState = taskState
-    }
-
     fun isContain(task: Task) : Boolean = taskList.contains(task)
+
+    companion object {
+        private var id: Long = 0
+    }
 }

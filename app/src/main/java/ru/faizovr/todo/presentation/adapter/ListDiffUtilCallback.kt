@@ -15,8 +15,7 @@ class ListDiffUtilCallback(private val oldList: List<Task>, private val newList:
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        Log.d(TAG, "areContentsTheSame: ${oldList[oldItemPosition].taskState} && ${newList[newItemPosition].taskState}")
-        return oldList[oldItemPosition] == newList[newItemPosition]
+        return oldList[oldItemPosition].message == newList[newItemPosition].message
     }
 
     companion object {

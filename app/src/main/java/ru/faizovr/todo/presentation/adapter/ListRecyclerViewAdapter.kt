@@ -7,11 +7,13 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.faizovr.todo.R
 import ru.faizovr.todo.data.Task
 import ru.faizovr.todo.presentation.viewholder.TaskViewHolder
+import java.util.*
+import kotlin.collections.ArrayList
 
-class ListRecyclerViewAdapter(private val onEditButtonClickListener: (task: Task) -> Unit):
+class ListRecyclerViewAdapter():
     RecyclerView.Adapter<TaskViewHolder>() {
 
-    private val taskList: ArrayList<Task> = arrayListOf()
+    private val taskList: MutableList<Task> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -22,15 +24,14 @@ class ListRecyclerViewAdapter(private val onEditButtonClickListener: (task: Task
     fun updateList(newList: List<Task>) {
         val diffResult = DiffUtil.calculateDiff(ListDiffUtilCallback(taskList, newList))
         taskList.clear()
-        taskList.addAll(newList.toSet())
+        taskList.addAll(newList)
         diffResult.dispatchUpdatesTo(this)
-//        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = taskList.size
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        holder.bind(taskList[position], onEditButtonClickListener)
+        holder.bind(taskList[position])
     }
 
     fun getTaskFromView(position: Int): Task = taskList[position]
