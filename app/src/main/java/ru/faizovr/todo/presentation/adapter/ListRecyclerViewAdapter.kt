@@ -30,7 +30,7 @@ class ListRecyclerViewAdapter(private val onEditButtonClickListener: (task: Task
         val diffResult = DiffUtil.calculateDiff(ListDiffUtilCallback(taskList, newList))
         Log.d(TAG, "updateList: FIRST")
         taskList.clear()
-        taskList = newList.toMutableList()
+        taskList.addAll(newList)
         diffResult.dispatchUpdatesTo(this)
         Log.d(TAG, "updateList: SECOND")
 
