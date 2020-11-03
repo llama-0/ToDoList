@@ -20,11 +20,17 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
 
     private lateinit var taskListPresenter: TaskListContract.PresenterInterface
 
+    private val onEditButtonClicked : (task: Task) -> Unit = {
+        it.message = "HELLOOO"
+        taskListPresenter.init()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setupViews()
         setupPresenter()
+        lists_recycler_view.adapter = ListRecyclerViewAdapter(onEditButtonClicked)
     }
 
     private fun setupPresenter() {
@@ -42,7 +48,6 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
 
         ItemTouchHelper(ListItemTouchHelper()).attachToRecyclerView(lists_recycler_view)
 
-        lists_recycler_view.adapter = ListRecyclerViewAdapter()
         lists_recycler_view.layoutManager = LinearLayoutManager(this)
     }
 
