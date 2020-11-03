@@ -21,7 +21,7 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
     private lateinit var taskListPresenter: TaskListContract.PresenterInterface
 
     private val onEditButtonClicked : (task: Task) -> Unit = {
-        it.message = "HELLOOO"
+        it.message = "Text Changed"
         taskListPresenter.init()
     }
 
