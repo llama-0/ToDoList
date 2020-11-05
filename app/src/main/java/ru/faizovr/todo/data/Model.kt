@@ -1,7 +1,5 @@
 package ru.faizovr.todo.data
 
-import android.util.Log
-
 class Model {
     private val taskList: MutableList<Task> = mutableListOf()
 
@@ -11,7 +9,6 @@ class Model {
         val newTask = Task(id, message)
         id++
         taskList.add(newTask)
-        Log.d(TAG, "addTask: ${newTask.taskState}")
     }
 
     fun swapTask(fromPosition: Int, toPosition: Int) {
@@ -37,8 +34,6 @@ class Model {
     fun setTaskMessage(position: Int, message: String) {
         taskList[position].message = message
     }
-
-    fun isContain(task: Task) : Boolean = taskList.contains(task)
 
     companion object {
         private const val TAG = "Model"

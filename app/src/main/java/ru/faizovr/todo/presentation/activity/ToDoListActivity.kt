@@ -30,7 +30,7 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
         setContentView(R.layout.activity_main)
         setupViews()
         setupPresenter()
-        lists_recycler_view.adapter = ListRecyclerViewAdapter(onEditButtonClicked)
+
     }
 
     private fun setupPresenter() {
@@ -43,7 +43,7 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
         edit_text_add.addTextChangedListener(MyTextWatcher())
 
         ItemTouchHelper(ListItemTouchHelper()).attachToRecyclerView(lists_recycler_view)
-
+        lists_recycler_view.adapter = ListRecyclerViewAdapter(onEditButtonClicked)
         lists_recycler_view.layoutManager = LinearLayoutManager(this)
     }
 
