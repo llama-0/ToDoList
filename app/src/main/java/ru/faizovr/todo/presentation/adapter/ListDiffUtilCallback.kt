@@ -16,19 +16,21 @@ class ListDiffUtilCallback(private val oldList: List<Task>, private val newList:
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        Log.d(TAG, "areContentsTheSame: ${oldList[oldItemPosition].message} ${newList[newItemPosition].message}")
         return oldList[oldItemPosition] == newList[newItemPosition]
     }
 
     override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
         val newTask: Task = newList[newItemPosition]
         val oldTask: Task = oldList[oldItemPosition]
-        Log.d(TAG, "getChangePayload: ")
         val diff: Bundle = Bundle()
-        Log.d(TAG, "getChangePayload: ${newTask.message} ${oldTask.message}")
+        if (oldItemPosition != newItemPosition) {
+            diff.putInt("NewPosition", newItemPosition)
+        }
         if (newTask.message != oldTask.message) {
-            Log.d(TAG, "getChangePayload: added to Bundle")
             diff.putString("Message", newTask.message)
+        }
+        if (newTask.taskState != oldTask.taskState) {
+            diff.putString("TaskState", newTask.taskState.toString())
         }
         return diff
     }

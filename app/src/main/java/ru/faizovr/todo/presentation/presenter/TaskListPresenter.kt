@@ -2,49 +2,98 @@ package ru.faizovr.todo.presentation.presenter
 
 import ru.faizovr.todo.data.Model
 import ru.faizovr.todo.data.Task
+import ru.faizovr.todo.data.TaskState
+import ru.faizovr.todo.presentation.InputState
 import ru.faizovr.todo.presentation.TaskListContract
 
 class TaskListPresenter (private val viewInterface: TaskListContract.ViewInterface, private val model: Model)
     : TaskListContract.PresenterInterface {
 
     private var editTextString: String = ""
+    private var inputState: InputState = InputState.ADD
 
     override fun init() {
         showContent()
     }
 
-    private fun deleteTask(task: Task) {
-        if (model.isContain(task)) {
-            model.deleteTask(task)
+    private fun deleteTask(position: Int) {
+        if (model.getMyList().size > position) {
+            model.deleteTask(position)
         }
     }
 
-    override fun listItemMoved(task: Task, toPosition: Int) {
-        model.swapTask(task, toPosition)
+    override fun listItemMoved(fromPosition: Int, toPosition: Int) {
+        model.swapTask(fromPosition, toPosition)
         showContent()
     }
 
-    override fun listItemSwiped(task: Task) {
-        deleteTask(task)
-            viewInterface.changeButtonClickable(editTextString.isNotEmpty())
+    override fun listItemSwiped(position: Int) {
+        if (inputState == InputState.EDIT && position == model.getEditableTaskPosition()) {
+            inputState = InputState.ADD
+            viewInterface.changeEditTextText(editTextString)
+        }
+        deleteTask(position)
         showContent()
     }
 
-    override fun buttonAddTaskClicked(message: String) {
-        model.addTask(message)
+    override fun buttonAddTaskClicked(string: String) {
+        model.addTask(string)
         editTextString = ""
         viewInterface.clearEditText()
-        viewInterface.changeButtonClickable(false)
+        showContent()
+    }
+
+    override fun buttonEditTaskClicked(string: String) {
+        model.setTaskMessage(model.getEditableTaskPosition(), string)
+        model.setTaskState(model.getEditableTaskPosition(), TaskState.DEFAULT)
+        viewInterface.changeEditTextText(editTextString)
+        inputState = InputState.ADD
+        showContent()
+    }
+
+    private fun setupButtonLogic() {
+        if (inputState == InputState.ADD)
+            viewInterface.setupAddButton()
+        else
+            viewInterface.setupEditButton()
+        viewInterface.changeButtonClickable(editTextString.isNotEmpty())
+    }
+
+    private fun changeButtonText() {
+        if (inputState == InputState.ADD)
+            viewInterface.setAddTextToButton()
+        else
+            viewInterface.setEditTextToButton()
+    }
+
+    override fun buttonListEditTaskClicked(position: Int) {
+        if (inputState == InputState.ADD) {
+            inputState = InputState.EDIT
+            model.setTaskState(position, TaskState.EDIT)
+            viewInterface.changeEditTextText(model.getEditableTaskMessage())
+        } else {
+            if (model.getEditableTaskPosition() == position) {
+                inputState = InputState.ADD
+                model.setTaskState(position, TaskState.DEFAULT)
+                viewInterface.changeEditTextText(editTextString)
+            } else {
+                model.setTaskState(model.getEditableTaskPosition(), TaskState.DEFAULT)
+                model.setTaskState(position, TaskState.EDIT)
+                viewInterface.changeEditTextText(model.getEditableTaskMessage())
+            }
+        }
         showContent()
     }
 
     override fun editTextTextChanged(string: String) {
-        editTextString = string
+        if (inputState == InputState.ADD) {
+            editTextString = string
+        }
         viewInterface.changeButtonClickable(string.isNotEmpty())
     }
 
-    private fun showContent() {
-        val taskList = model.getMyList()
+    private fun updateList() {
+        val taskList: List<Task> = model.getMyList()
         if (taskList.isEmpty()) {
             viewInterface.changeEmptyTextMessageVisibility(true)
             viewInterface.changeListVisibility(false)
@@ -54,6 +103,13 @@ class TaskListPresenter (private val viewInterface: TaskListContract.ViewInterfa
             viewInterface.changeListVisibility(true)
             viewInterface.updateList(taskList)
         }
+    }
+
+    private fun showContent() {
+        updateList()
+        setupButtonLogic()
+        viewInterface.changeButtonClickable(editTextString.isNotEmpty())
+        changeButtonText()
     }
 
     companion object {

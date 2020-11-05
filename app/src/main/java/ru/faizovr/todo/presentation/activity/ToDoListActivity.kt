@@ -13,6 +13,7 @@ import ru.faizovr.todo.ToDoApplication
 import ru.faizovr.todo.R
 import ru.faizovr.todo.presentation.adapter.ListRecyclerViewAdapter
 import ru.faizovr.todo.data.Task
+import ru.faizovr.todo.presentation.InputState
 import ru.faizovr.todo.presentation.TaskListContract
 import ru.faizovr.todo.presentation.presenter.TaskListPresenter
 
@@ -20,9 +21,8 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
 
     private lateinit var taskListPresenter: TaskListContract.PresenterInterface
 
-    private val onEditButtonClicked : (task: Task) -> Unit = {
-        it.message = "Text Changed"
-        taskListPresenter.init()
+    private val onEditButtonClicked : (position: Int) -> Unit = {
+        taskListPresenter.buttonListEditTaskClicked(it)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,13 +42,21 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
     private fun setupViews() {
         edit_text_add.addTextChangedListener(MyTextWatcher())
 
-        button_addTask.setOnClickListener {
-            taskListPresenter.buttonAddTaskClicked(edit_text_add.text.toString())
-        }
-
         ItemTouchHelper(ListItemTouchHelper()).attachToRecyclerView(lists_recycler_view)
 
         lists_recycler_view.layoutManager = LinearLayoutManager(this)
+    }
+
+    override fun setupAddButton() {
+        button_addTask.setOnClickListener {
+            taskListPresenter.buttonAddTaskClicked(edit_text_add.text.toString())
+        }
+    }
+
+    override fun setupEditButton() {
+        button_addTask.setOnClickListener {
+            taskListPresenter.buttonEditTaskClicked(edit_text_add.text.toString())
+        }
     }
 
     override fun clearEditText() {
@@ -73,12 +81,20 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
         }
     }
 
-    override fun changeEditTextText(message: String) {
-        edit_text_add.setText(message)
+    override fun changeEditTextText(string: String) {
+        edit_text_add.setText(string)
     }
 
-    override fun changeAddButtonText(message: String) {
-        button_addTask.text = message
+    override fun changeAddButtonText(string: String) {
+        button_addTask.text = string
+    }
+
+    override fun setAddTextToButton() {
+        button_addTask.setText(R.string.action_add_task)
+    }
+
+    override fun setEditTextToButton() {
+        button_addTask.setText(R.string.action_edit_task)
     }
 
     override fun updateList(taskList: List<Task>) {
@@ -97,7 +113,7 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            taskListPresenter.editTextTextChanged(s.toString())
+            taskListPresenter.editTextTextChanged(edit_text_add.text.toString())
         }
     }
 
@@ -110,14 +126,12 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
         }
 
         override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-            val listRecyclerViewAdapter = lists_recycler_view.adapter as ListRecyclerViewAdapter
-            taskListPresenter.listItemMoved(listRecyclerViewAdapter.getTaskFromView(viewHolder.adapterPosition), target.adapterPosition)
+            taskListPresenter.listItemMoved(viewHolder.adapterPosition, target.adapterPosition)
             return true
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            val listRecyclerViewAdapter = lists_recycler_view.adapter as ListRecyclerViewAdapter
-            taskListPresenter.listItemSwiped(listRecyclerViewAdapter.getTaskFromView(viewHolder.adapterPosition))
+            taskListPresenter.listItemSwiped(viewHolder.adapterPosition)
         }
 
         override fun isLongPressDragEnabled(): Boolean {

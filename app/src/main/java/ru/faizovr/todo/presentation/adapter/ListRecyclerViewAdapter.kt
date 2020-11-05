@@ -1,24 +1,22 @@
 package ru.faizovr.todo.presentation.adapter
 
-import android.R.attr.data
-import android.R.attr.logoDescription
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.task_view_holder.view.*
 import ru.faizovr.todo.R
 import ru.faizovr.todo.data.Task
+import ru.faizovr.todo.data.TaskState
 import ru.faizovr.todo.presentation.viewholder.TaskViewHolder
+import kotlin.collections.ArrayList
 
-
-class ListRecyclerViewAdapter(private val onEditButtonClickListener: (task: Task) -> Unit):
+class ListRecyclerViewAdapter(private val onEditButtonClickListener: (position: Int) -> Unit):
     RecyclerView.Adapter<TaskViewHolder>() {
 
-    private var taskList: MutableList<Task> = ArrayList()
+    private var taskList: List<Task> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -28,12 +26,10 @@ class ListRecyclerViewAdapter(private val onEditButtonClickListener: (task: Task
 
     fun updateList(newList: List<Task>) {
         val diffResult = DiffUtil.calculateDiff(ListDiffUtilCallback(taskList, newList))
-        Log.d(TAG, "updateList: FIRST")
-        taskList.clear()
-        taskList = newList.toMutableList()
+        Log.d(TAG, "updateList: old ${taskList.map { it.taskState.toString() }}")
+        Log.d(TAG, "updateList: new ${newList.map { it.taskState.toString() }}")
+        taskList = newList.map { it.copy() }.toList()
         diffResult.dispatchUpdatesTo(this)
-        Log.d(TAG, "updateList: SECOND")
-
     }
 
     override fun getItemCount(): Int = taskList.size
@@ -43,16 +39,22 @@ class ListRecyclerViewAdapter(private val onEditButtonClickListener: (task: Task
             super.onBindViewHolder(holder, position, payloads)
         } else {
             val o = payloads[0] as Bundle
-            Log.d(TAG, "onBindViewHolder: ${o}")
-            Log.d(TAG, "onBindViewHolder: ${o.getString("Message")}")
             for (key in o.keySet()) {
-                Log.d(TAG, "onBindViewHolder: $key")
                 if (key == "Message") {
-                    Toast.makeText(holder.itemView.context, "Contact $position : Name Changed", Toast.LENGTH_SHORT).show()
                     holder.itemView.text_task.text = o.getString("Message")
-                    holder.itemView.setOnClickListener{
-                        onEditButtonClickListener(taskList[position])
+                }
+                if (key == "NewPosition") {
+                    holder.itemView.button_edit_task.setOnClickListener{
+                        onEditButtonClickListener(o.getInt("NewPosition"))
                     }
+                }
+                if (key == "TaskState") {
+                    val string = o.getString("TaskState")
+                    val taskState = when (string.equals("EDIT")) {
+                        true -> TaskState.EDIT
+                        else -> TaskState.DEFAULT
+                    }
+                    holder.setImage(taskState)
                 }
             }
         }
@@ -60,12 +62,10 @@ class ListRecyclerViewAdapter(private val onEditButtonClickListener: (task: Task
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         holder.bind(taskList[position])
-        holder.itemView.setOnClickListener {
-            onEditButtonClickListener(taskList[position])
+        holder.itemView.button_edit_task.setOnClickListener{
+            onEditButtonClickListener(position)
         }
     }
-
-    fun getTaskFromView(position: Int): Task = taskList[position]
 
     companion object {
         @Suppress("unused")

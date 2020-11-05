@@ -4,4 +4,5 @@
     <string name="action_add_task">Добавить</string>
     <string name="hint_add_task">вы можете ввести здесь …</string>
     <string name="message_empty_string">Список пуст</string>
+    <string name="action_edit_task">Редактировать</string>
 </resources>
