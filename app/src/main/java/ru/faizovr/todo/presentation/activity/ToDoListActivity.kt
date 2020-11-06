@@ -14,13 +14,13 @@ import ru.faizovr.todo.data.Task
 import ru.faizovr.todo.presentation.TaskListContract
 import ru.faizovr.todo.presentation.adapter.ToDoTaskAdapter
 import ru.faizovr.todo.presentation.presenter.TaskListPresenter
-
 class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
 
     private lateinit var taskListPresenter: TaskListContract.PresenterInterface
 
-    private val onEditButtonClicked: (position: Int) -> Unit =
-            taskListPresenter::onEditTaskClickedForPosition
+    private val onEditButtonClicked: (position: Int) -> Unit  = { it: Int ->
+        taskListPresenter.onEditTaskClickedForPosition(it)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +40,7 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
 
         ItemTouchHelper(ListItemTouchHelper()).attachToRecyclerView(lists_recycler_view)
         lists_recycler_view.adapter = ToDoTaskAdapter(onEditButtonClicked)
+
     }
 
     override fun setAddFuncToMainButton() {
@@ -123,4 +124,5 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
         override fun isItemViewSwipeEnabled(): Boolean = true
     }
 }
+
 
