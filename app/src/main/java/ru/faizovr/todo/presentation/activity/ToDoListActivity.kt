@@ -4,32 +4,29 @@ import android.app.Activity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
-import ru.faizovr.todo.ToDoApplication
 import ru.faizovr.todo.R
-import ru.faizovr.todo.presentation.adapter.ListRecyclerViewAdapter
+import ru.faizovr.todo.ToDoApplication
 import ru.faizovr.todo.data.Task
 import ru.faizovr.todo.presentation.TaskListContract
+import ru.faizovr.todo.presentation.adapter.ToDoTaskAdapter
 import ru.faizovr.todo.presentation.presenter.TaskListPresenter
 
 class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
 
     private lateinit var taskListPresenter: TaskListContract.PresenterInterface
 
-    private val onEditButtonClicked : (position: Int) -> Unit = {
-        taskListPresenter.buttonListEditTaskClicked(it)
-    }
+    private val onEditButtonClicked: (position: Int) -> Unit =
+            taskListPresenter::onEditTaskClickedForPosition
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setupViews()
         setupPresenter()
-
     }
 
     private fun setupPresenter() {
@@ -42,8 +39,7 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
         edit_text_add.addTextChangedListener(MyTextWatcher())
 
         ItemTouchHelper(ListItemTouchHelper()).attachToRecyclerView(lists_recycler_view)
-        lists_recycler_view.adapter = ListRecyclerViewAdapter(onEditButtonClicked)
-        lists_recycler_view.layoutManager = LinearLayoutManager(this)
+        lists_recycler_view.adapter = ToDoTaskAdapter(onEditButtonClicked)
     }
 
     override fun setAddFuncToMainButton() {
@@ -67,21 +63,15 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
     }
 
     override fun setListVisibility(isVisible: Boolean) {
-        lists_recycler_view.visibility = when (isVisible) {
-            true -> View.VISIBLE
-            false -> View.GONE
-        }
+        lists_recycler_view.isVisible = isVisible
     }
 
     override fun setEmptyTextMessageVisibility(isVisible: Boolean) {
-        text_empty.visibility = when (isVisible) {
-            true -> View.VISIBLE
-            false -> View.GONE
-        }
+        text_empty.isVisible = isVisible
     }
 
-    override fun setEditTextText(string: String) {
-        edit_text_add.setText(string)
+    override fun setToDoTaskInputText(message: String) {
+        edit_text_add.setText(message)
     }
 
     override fun setAddTextToMainButton() {
@@ -93,7 +83,7 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
     }
 
     override fun updateList(taskList: List<Task>) {
-        val adapter: ListRecyclerViewAdapter = lists_recycler_view.adapter as ListRecyclerViewAdapter
+        val adapter: ToDoTaskAdapter = lists_recycler_view.adapter as ToDoTaskAdapter
         adapter.updateList(taskList)
     }
 
@@ -103,16 +93,16 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
     }
 
     inner class MyTextWatcher : TextWatcher {
-        override fun afterTextChanged(s: Editable?) {}
+        override fun afterTextChanged(s: Editable?): Unit = Unit
 
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int): Unit = Unit
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            taskListPresenter.editTextTextChanged(edit_text_add.text.toString())
+            taskListPresenter.onTaskMessageInputTextChanged(edit_text_add.text.toString())
         }
     }
 
-    inner class ListItemTouchHelper() : ItemTouchHelper.Callback() {
+    inner class ListItemTouchHelper : ItemTouchHelper.Callback() {
 
         override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
             val dragFlags: Int = ItemTouchHelper.UP or ItemTouchHelper.DOWN
@@ -125,17 +115,12 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
             return true
         }
 
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            taskListPresenter.listItemSwiped(viewHolder.adapterPosition)
-        }
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int): Unit =
+                taskListPresenter.listItemSwiped(viewHolder.adapterPosition)
 
-        override fun isLongPressDragEnabled(): Boolean {
-            return true
-        }
+        override fun isLongPressDragEnabled(): Boolean = true
 
-        override fun isItemViewSwipeEnabled(): Boolean {
-            return true
-        }
+        override fun isItemViewSwipeEnabled(): Boolean = true
     }
 }
 

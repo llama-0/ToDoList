@@ -1,46 +1,53 @@
 package ru.faizovr.todo.data
 
 class Model {
-    private val taskList: MutableList<Task> = mutableListOf()
 
-    fun getMyList(): List<Task> = taskList
+    private val taskList: MutableList<Task> = mutableListOf()
+    private var id: Long = 0
+    private var editablePosition: Int = -1
+
+    fun getMyList(): List<Task> =
+            taskList
 
     fun addTask(message: String) {
-        val newTask = Task(id, message)
-        id++
+        val newTask = Task(id++, message)
         taskList.add(newTask)
     }
 
     fun swapTask(fromPosition: Int, toPosition: Int) {
-        val temp : Task = taskList[fromPosition]
-        taskList[fromPosition] = taskList[toPosition]
-        taskList[toPosition] = temp
+        if (fromPosition in 0 until taskList.size && toPosition in 0 until taskList.size) {
+            val temp: Task = taskList[fromPosition]
+            taskList[fromPosition] = taskList[toPosition]
+            taskList[toPosition] = temp
+        }
     }
 
     fun getEditableTaskPosition(): Int =
-            taskList.indexOfFirst { it.taskState == TaskState.EDIT }
+            editablePosition
 
     fun getEditableTaskMessage(): String =
-            taskList[taskList.indexOfFirst { it.taskState == TaskState.EDIT }].message
+            taskList[getEditableTaskPosition()].message
 
     fun setTaskState(position: Int, taskState: TaskState) {
-        taskList[position].taskState = taskState
+        if (position in 0 until taskList.size) {
+            taskList[position].taskState = taskState
+            editablePosition = if (taskState == TaskState.EDIT)
+                position
+            else
+                -1
+        }
     }
 
     fun deleteTask(position: Int) {
-        taskList.removeAt(position)
+        if (position in 0 until taskList.size)
+            taskList.removeAt(position)
     }
 
     fun setTaskMessage(position: Int, message: String) {
-        taskList[position].message = message
+        if (position in 0 until taskList.size)
+            taskList[position].message = message
     }
 
-    fun getCopyList(): List<Task>
-            = taskList.map { it.copy() }
-
-    companion object {
-        private var id: Long = 0
-    }
+    fun getCopyList(): List<Task> =
+            taskList.map(Task::copy)
 }
-
-

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">TODO</string>
+    <string name="app_name">ToDoList</string>
     <string name="action_add_task">Add</string>
-    <string name="hint_add_task">you can type here …</string>
-    <string name="message_empty_string">List is empty</string>
+    <string name="hint_add_task">e.g, Read Book today</string>
+    <string name="message_empty_string">Task List is empty</string>
     <string name="action_edit_task">Edit</string>
 </resources>

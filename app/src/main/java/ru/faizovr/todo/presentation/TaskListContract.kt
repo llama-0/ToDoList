@@ -11,7 +11,7 @@ interface TaskListContract {
         fun setMainButtonClickable(isClickable: Boolean)
         fun setListVisibility(isVisible: Boolean)
         fun setEmptyTextMessageVisibility(isVisible: Boolean)
-        fun setEditTextText(string: String)
+        fun setToDoTaskInputText(message: String)
         fun setAddTextToMainButton()
         fun setEditTextToMainButton()
         fun clearEditText()
@@ -19,11 +19,11 @@ interface TaskListContract {
 
     interface PresenterInterface {
         fun init()
-        fun buttonListEditTaskClicked(position: Int)
+        fun onEditTaskClickedForPosition(position: Int)
         fun listItemMoved(fromPosition: Int, toPosition: Int)
         fun listItemSwiped(position: Int)
-        fun buttonAddTaskClicked(string: String)
-        fun buttonEditTaskClicked(string: String)
-        fun editTextTextChanged(string: String)
+        fun buttonAddTaskClicked(message: String)
+        fun buttonEditTaskClicked(message: String)
+        fun onTaskMessageInputTextChanged(message: String)
     }
 }

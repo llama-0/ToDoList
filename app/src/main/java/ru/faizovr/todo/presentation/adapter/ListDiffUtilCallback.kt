@@ -10,12 +10,13 @@ class ListDiffUtilCallback(private val oldList: List<Task>, private val newList:
 
     override fun getNewListSize(): Int = newList.size
 
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].id == newList[newItemPosition].id
-    }
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+            oldList[oldItemPosition].id == newList[newItemPosition].id
 
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition] == newList[newItemPosition]
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean = when {
+        oldList[oldItemPosition].message == newList[newItemPosition].message -> false
+        oldList[oldItemPosition].taskState == newList[newItemPosition].taskState -> false
+        else -> true
     }
 
     override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
@@ -23,13 +24,13 @@ class ListDiffUtilCallback(private val oldList: List<Task>, private val newList:
         val oldTask: Task = oldList[oldItemPosition]
         val diff: Bundle = Bundle()
         if (oldItemPosition != newItemPosition) {
-            diff.putInt(ListRecyclerViewAdapter.KEY_NEW_POSITION, newItemPosition)
+            diff.putInt(ToDoTaskAdapter.KEY_NEW_POSITION, newItemPosition)
         }
         if (newTask.message != oldTask.message) {
-            diff.putString(ListRecyclerViewAdapter.KEY_MESSAGE, newTask.message)
+            diff.putString(ToDoTaskAdapter.KEY_MESSAGE, newTask.message)
         }
         if (newTask.taskState != oldTask.taskState) {
-            diff.putString(ListRecyclerViewAdapter.KEY_TASK_STATE, newTask.taskState.toString())
+            diff.putString(ToDoTaskAdapter.KEY_TASK_STATE, newTask.taskState.toString())
         }
         return diff
     }
