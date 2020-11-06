@@ -35,8 +35,10 @@ class Model {
         taskList[position].message = message
     }
 
+    fun getCopyList(): List<Task>
+            = taskList.map { it.copy() }
+
     companion object {
-        private const val TAG = "Model"
         private var id: Long = 0
     }
 }

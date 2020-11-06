@@ -13,7 +13,6 @@ import ru.faizovr.todo.ToDoApplication
 import ru.faizovr.todo.R
 import ru.faizovr.todo.presentation.adapter.ListRecyclerViewAdapter
 import ru.faizovr.todo.data.Task
-import ru.faizovr.todo.presentation.InputState
 import ru.faizovr.todo.presentation.TaskListContract
 import ru.faizovr.todo.presentation.presenter.TaskListPresenter
 
@@ -34,7 +33,7 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
     }
 
     private fun setupPresenter() {
-        val app = application as ToDoApplication
+        val app: ToDoApplication = application as ToDoApplication
         taskListPresenter = TaskListPresenter(this, app.model)
         taskListPresenter.init()
     }
@@ -47,14 +46,14 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
         lists_recycler_view.layoutManager = LinearLayoutManager(this)
     }
 
-    override fun setupAddButton() {
-        button_addTask.setOnClickListener {
+    override fun setAddFuncToMainButton() {
+        button_main.setOnClickListener {
             taskListPresenter.buttonAddTaskClicked(edit_text_add.text.toString())
         }
     }
 
-    override fun setupEditButton() {
-        button_addTask.setOnClickListener {
+    override fun setEditFuncToMainButton() {
+        button_main.setOnClickListener {
             taskListPresenter.buttonEditTaskClicked(edit_text_add.text.toString())
         }
     }
@@ -63,38 +62,34 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
         edit_text_add.text.clear()
     }
 
-    override fun changeButtonClickable(isClickable: Boolean) {
-        button_addTask.isClickable = isClickable
+    override fun setMainButtonClickable(isClickable: Boolean) {
+        button_main.isClickable = isClickable
     }
 
-    override fun changeListVisibility(isVisible: Boolean) {
+    override fun setListVisibility(isVisible: Boolean) {
         lists_recycler_view.visibility = when (isVisible) {
             true -> View.VISIBLE
             false -> View.GONE
         }
     }
 
-    override fun changeEmptyTextMessageVisibility(isVisible: Boolean) {
+    override fun setEmptyTextMessageVisibility(isVisible: Boolean) {
         text_empty.visibility = when (isVisible) {
             true -> View.VISIBLE
             false -> View.GONE
         }
     }
 
-    override fun changeEditTextText(string: String) {
+    override fun setEditTextText(string: String) {
         edit_text_add.setText(string)
     }
 
-    override fun changeAddButtonText(string: String) {
-        button_addTask.text = string
+    override fun setAddTextToMainButton() {
+        button_main.setText(R.string.action_add_task)
     }
 
-    override fun setAddTextToButton() {
-        button_addTask.setText(R.string.action_add_task)
-    }
-
-    override fun setEditTextToButton() {
-        button_addTask.setText(R.string.action_edit_task)
+    override fun setEditTextToMainButton() {
+        button_main.setText(R.string.action_edit_task)
     }
 
     override fun updateList(taskList: List<Task>) {
@@ -120,8 +115,8 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
     inner class ListItemTouchHelper() : ItemTouchHelper.Callback() {
 
         override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-            val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
-            val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
+            val dragFlags: Int = ItemTouchHelper.UP or ItemTouchHelper.DOWN
+            val swipeFlags: Int = ItemTouchHelper.START or ItemTouchHelper.END
             return makeMovementFlags(dragFlags, swipeFlags)
         }
 

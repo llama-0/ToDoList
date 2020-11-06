@@ -1,7 +1,6 @@
 package ru.faizovr.todo.presentation.adapter
 
 import android.os.Bundle
-import android.util.Log
 import androidx.recyclerview.widget.DiffUtil
 import ru.faizovr.todo.data.Task
 
@@ -24,13 +23,13 @@ class ListDiffUtilCallback(private val oldList: List<Task>, private val newList:
         val oldTask: Task = oldList[oldItemPosition]
         val diff: Bundle = Bundle()
         if (oldItemPosition != newItemPosition) {
-            diff.putInt("NewPosition", newItemPosition)
+            diff.putInt(ListRecyclerViewAdapter.KEY_NEW_POSITION, newItemPosition)
         }
         if (newTask.message != oldTask.message) {
-            diff.putString("Message", newTask.message)
+            diff.putString(ListRecyclerViewAdapter.KEY_MESSAGE, newTask.message)
         }
         if (newTask.taskState != oldTask.taskState) {
-            diff.putString("TaskState", newTask.taskState.toString())
+            diff.putString(ListRecyclerViewAdapter.KEY_TASK_STATE, newTask.taskState.toString())
         }
         return diff
     }
@@ -39,5 +38,4 @@ class ListDiffUtilCallback(private val oldList: List<Task>, private val newList:
         @Suppress("unused")
         private const val TAG = "getChangePayload"
     }
-
 }

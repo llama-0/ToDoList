@@ -3,6 +3,7 @@ package ru.faizovr.todo.presentation.adapter
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -19,16 +20,18 @@ class ListRecyclerViewAdapter(private val onEditButtonClickListener: (position: 
     private var taskList: List<Task> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
-        val view = LayoutInflater.from(parent.context)
+        val view: View = LayoutInflater.from(parent.context)
             .inflate(R.layout.task_view_holder, parent, false)
         return TaskViewHolder(view)
     }
 
+//    TODO Перекинуть в model
+
     fun updateList(newList: List<Task>) {
-        val diffResult = DiffUtil.calculateDiff(ListDiffUtilCallback(taskList, newList))
+        val diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(ListDiffUtilCallback(taskList, newList))
         Log.d(TAG, "updateList: old ${taskList.map { it.taskState.toString() }}")
         Log.d(TAG, "updateList: new ${newList.map { it.taskState.toString() }}")
-        taskList = newList.map { it.copy() }.toList()
+        taskList = newList
         diffResult.dispatchUpdatesTo(this)
     }
 
@@ -38,17 +41,17 @@ class ListRecyclerViewAdapter(private val onEditButtonClickListener: (position: 
         if (payloads.isEmpty()) {
             super.onBindViewHolder(holder, position, payloads)
         } else {
-            val o = payloads[0] as Bundle
-            for (key in o.keySet()) {
-                if (key == "Message") {
+            val o: Bundle = payloads[0] as Bundle
+            for (key: String in o.keySet()) {
+                if (key == KEY_MESSAGE) {
                     holder.itemView.text_task.text = o.getString("Message")
                 }
-                if (key == "NewPosition") {
+                if (key == KEY_NEW_POSITION) {
                     holder.itemView.button_edit_task.setOnClickListener{
                         onEditButtonClickListener(o.getInt("NewPosition"))
                     }
                 }
-                if (key == "TaskState") {
+                if (key == KEY_TASK_STATE) {
                     val string = o.getString("TaskState")
                     val taskState = when (string.equals("EDIT")) {
                         true -> TaskState.EDIT
@@ -70,5 +73,8 @@ class ListRecyclerViewAdapter(private val onEditButtonClickListener: (position: 
     companion object {
         @Suppress("unused")
         private const val TAG = "ListRecyclerViewAdapter"
+        const val KEY_MESSAGE = "Message"
+        const val KEY_NEW_POSITION = "NewPosition"
+        const val KEY_TASK_STATE = "TaskState"
     }
 }

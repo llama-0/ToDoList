@@ -30,7 +30,7 @@ class TaskListPresenter (private val viewInterface: TaskListContract.ViewInterfa
     override fun listItemSwiped(position: Int) {
         if (inputState == InputState.EDIT && position == model.getEditableTaskPosition()) {
             inputState = InputState.ADD
-            viewInterface.changeEditTextText(editTextString)
+            viewInterface.setEditTextText(editTextString)
         }
         deleteTask(position)
         showContent()
@@ -46,40 +46,40 @@ class TaskListPresenter (private val viewInterface: TaskListContract.ViewInterfa
     override fun buttonEditTaskClicked(string: String) {
         model.setTaskMessage(model.getEditableTaskPosition(), string)
         model.setTaskState(model.getEditableTaskPosition(), TaskState.DEFAULT)
-        viewInterface.changeEditTextText(editTextString)
+        viewInterface.setEditTextText(editTextString)
         inputState = InputState.ADD
         showContent()
     }
 
     private fun setupButtonLogic() {
         if (inputState == InputState.ADD)
-            viewInterface.setupAddButton()
+            viewInterface.setAddFuncToMainButton()
         else
-            viewInterface.setupEditButton()
-        viewInterface.changeButtonClickable(editTextString.isNotEmpty())
+            viewInterface.setEditFuncToMainButton()
+        viewInterface.setMainButtonClickable(editTextString.isNotEmpty())
     }
 
     private fun changeButtonText() {
         if (inputState == InputState.ADD)
-            viewInterface.setAddTextToButton()
+            viewInterface.setAddTextToMainButton()
         else
-            viewInterface.setEditTextToButton()
+            viewInterface.setEditTextToMainButton()
     }
 
     override fun buttonListEditTaskClicked(position: Int) {
         if (inputState == InputState.ADD) {
             inputState = InputState.EDIT
             model.setTaskState(position, TaskState.EDIT)
-            viewInterface.changeEditTextText(model.getEditableTaskMessage())
+            viewInterface.setEditTextText(model.getEditableTaskMessage())
         } else {
             if (model.getEditableTaskPosition() == position) {
                 inputState = InputState.ADD
                 model.setTaskState(position, TaskState.DEFAULT)
-                viewInterface.changeEditTextText(editTextString)
+                viewInterface.setEditTextText(editTextString)
             } else {
                 model.setTaskState(model.getEditableTaskPosition(), TaskState.DEFAULT)
                 model.setTaskState(position, TaskState.EDIT)
-                viewInterface.changeEditTextText(model.getEditableTaskMessage())
+                viewInterface.setEditTextText(model.getEditableTaskMessage())
             }
         }
         showContent()
@@ -89,18 +89,18 @@ class TaskListPresenter (private val viewInterface: TaskListContract.ViewInterfa
         if (inputState == InputState.ADD) {
             editTextString = string
         }
-        viewInterface.changeButtonClickable(string.isNotEmpty())
+        viewInterface.setMainButtonClickable(string.isNotEmpty())
     }
 
     private fun updateList() {
-        val taskList: List<Task> = model.getMyList()
+        val taskList: List<Task> = model.getCopyList()
         if (taskList.isEmpty()) {
-            viewInterface.changeEmptyTextMessageVisibility(true)
-            viewInterface.changeListVisibility(false)
+            viewInterface.setEmptyTextMessageVisibility(true)
+            viewInterface.setListVisibility(false)
         }
         else {
-            viewInterface.changeEmptyTextMessageVisibility(false)
-            viewInterface.changeListVisibility(true)
+            viewInterface.setEmptyTextMessageVisibility(false)
+            viewInterface.setListVisibility(true)
             viewInterface.updateList(taskList)
         }
     }
@@ -108,7 +108,7 @@ class TaskListPresenter (private val viewInterface: TaskListContract.ViewInterfa
     private fun showContent() {
         updateList()
         setupButtonLogic()
-        viewInterface.changeButtonClickable(editTextString.isNotEmpty())
+        viewInterface.setMainButtonClickable(editTextString.isNotEmpty())
         changeButtonText()
     }
 

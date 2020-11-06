@@ -5,16 +5,15 @@ import ru.faizovr.todo.data.Task
 interface TaskListContract {
 
     interface ViewInterface {
-        fun setupAddButton()
-        fun setupEditButton()
+        fun setAddFuncToMainButton()
+        fun setEditFuncToMainButton()
         fun updateList(taskList: List<Task>)
-        fun changeButtonClickable(isClickable: Boolean)
-        fun changeListVisibility(isVisible: Boolean)
-        fun changeEmptyTextMessageVisibility(isVisible: Boolean)
-        fun changeEditTextText(string: String)
-        fun changeAddButtonText(string: String)
-        fun setAddTextToButton()
-        fun setEditTextToButton()
+        fun setMainButtonClickable(isClickable: Boolean)
+        fun setListVisibility(isVisible: Boolean)
+        fun setEmptyTextMessageVisibility(isVisible: Boolean)
+        fun setEditTextText(string: String)
+        fun setAddTextToMainButton()
+        fun setEditTextToMainButton()
         fun clearEditText()
     }
 
@@ -24,7 +23,7 @@ interface TaskListContract {
         fun listItemMoved(fromPosition: Int, toPosition: Int)
         fun listItemSwiped(position: Int)
         fun buttonAddTaskClicked(string: String)
-        fun editTextTextChanged(string: String)
         fun buttonEditTaskClicked(string: String)
+        fun editTextTextChanged(string: String)
     }
 }
