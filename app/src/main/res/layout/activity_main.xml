@@ -8,26 +8,24 @@
 
     <EditText
         android:id="@+id/edit_text_add"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/spacing_normal_16"
         android:hint="@string/hint_add_task"
         android:inputType="text"
-        app:layout_constraintEnd_toStartOf="@+id/button_main"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="Autofill" />
 
     <Button
         android:id="@+id/button_main"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/spacing_normal_16"
         android:layout_marginEnd="@dimen/spacing_normal_16"
         android:clickable="false"
         android:text="@string/action_add_task"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/edit_text_add" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lists_recycler_view"
@@ -39,7 +37,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_add"
+        app:layout_constraintTop_toBottomOf="@+id/button_main"
         tools:itemCount="13"
         tools:listitem="@layout/task_view_holder" />
 

@@ -1,40 +1,42 @@
 package ru.faizovr.todo.presentation.viewholder
 
+import android.graphics.Paint
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.task_view_holder.view.*
-import ru.faizovr.todo.R
-import ru.faizovr.todo.data.Task
-import ru.faizovr.todo.data.TaskState
 
-class TaskViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun setMessage(message: String) {
         itemView.text_task.text = message
     }
 
-    fun setId(id: Long) {
-        itemView.text_id.text = id.toString()
-    }
-
-    fun setImage (taskState: TaskState) {
-        if (taskState == TaskState.EDIT) {
-            itemView.button_edit_task.setImageResource(R.drawable.ic_round_close_48)
+    fun setState(isChecked: Boolean) {
+        itemView.checkbox_is_complete.isChecked = isChecked
+        if (isChecked) {
+            itemView.text_task.paintFlags = itemView.text_task.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
         } else {
-            itemView.button_edit_task.setImageResource(R.drawable.ic_round_edit_48)
+            itemView.text_task.paintFlags = 0
         }
     }
 
-    fun setOnClickListener(onEditButtonClickListener:  (position: Int) -> Unit, position: Int) {
-        itemView.button_edit_task.setOnClickListener{
+    fun setImage(imageId: Int) {
+        itemView.button_edit_task.setImageResource(imageId)
+    }
+
+    fun setOnClickListeners(onEditButtonClickListener: (position: Int) -> Unit, onCheckBoxClickListener: (position: Int) -> Unit, position: Int) {
+        itemView.button_edit_task.setOnClickListener {
             onEditButtonClickListener(position)
         }
+        itemView.checkbox_is_complete.setOnClickListener {
+            onCheckBoxClickListener(position)
+        }
     }
 
-    fun bind(task: Task, position: Int, onEditButtonClickListener: (position: Int) -> Unit) {
-        setId(task.id)
+    fun bind(task: TaskDataView, position: Int, onEditButtonClickListener: (position: Int) -> Unit, onCheckBoxClickListener: (position: Int) -> Unit) {
+        setState(task.isCheckBoxActive)
         setMessage(task.message)
-        setImage(task.taskState)
-        setOnClickListener(onEditButtonClickListener, position)
+        setImage(task.editButtonImageId)
+        setOnClickListeners(onEditButtonClickListener, onCheckBoxClickListener, position)
     }
 }

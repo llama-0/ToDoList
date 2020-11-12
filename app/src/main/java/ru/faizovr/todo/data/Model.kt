@@ -48,6 +48,13 @@ class Model {
             taskList[position].message = message
     }
 
+    fun getTaskFromPosition(position: Int): Task? {
+        if (position in 0 until taskList.size) {
+            return taskList[position]
+        }
+        return null
+    }
+
     fun getCopyList(): List<Task> =
             taskList.map(Task::copy)
 }

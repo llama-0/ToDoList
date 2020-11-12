@@ -1,10 +1,13 @@
 package ru.faizovr.todo.presentation.presenter
 
+import android.util.Log
 import ru.faizovr.todo.data.Model
 import ru.faizovr.todo.data.Task
 import ru.faizovr.todo.data.TaskState
 import ru.faizovr.todo.presentation.InputState
 import ru.faizovr.todo.presentation.TaskListContract
+import ru.faizovr.todo.presentation.mapper.TaskMapper
+import ru.faizovr.todo.presentation.viewholder.TaskDataView
 
 class TaskListPresenter(private val viewInterface: TaskListContract.ViewInterface, private val model: Model)
     : TaskListContract.PresenterInterface {
@@ -70,19 +73,35 @@ class TaskListPresenter(private val viewInterface: TaskListContract.ViewInterfac
         if (inputState == InputState.ADD) {
             inputState = InputState.EDIT
             model.setTaskState(position, TaskState.EDIT)
-            viewInterface.setToDoTaskInputText(model.getEditableTaskMessage())
         } else {
-            if (model.getEditableTaskPosition() == position) {
+            if (model.getTaskFromPosition(position)?.taskState == TaskState.EDIT) {
                 inputState = InputState.ADD
                 model.setTaskState(position, TaskState.DEFAULT)
-                viewInterface.setToDoTaskInputText(editTextString)
             } else {
                 model.setTaskState(model.getEditableTaskPosition(), TaskState.DEFAULT)
                 model.setTaskState(position, TaskState.EDIT)
-                viewInterface.setToDoTaskInputText(model.getEditableTaskMessage())
             }
         }
         showContent()
+    }
+
+    override fun onCheckBoxTaskClickedForPosition(position: Int) {
+        val taskAtPosition: Task? = model.getTaskFromPosition(position)
+        if (taskAtPosition != null) {
+            when (taskAtPosition.taskState) {
+                TaskState.DEFAULT -> {
+                    model.setTaskState(position, TaskState.COMPLETE)
+                }
+                TaskState.EDIT -> {
+                    inputState = InputState.ADD
+                    model.setTaskState(position, TaskState.COMPLETE)
+                }
+                TaskState.COMPLETE -> {
+                    model.setTaskState(position, TaskState.DEFAULT)
+                }
+            }
+            showContent()
+        }
     }
 
     override fun onTaskMessageInputTextChanged(message: String) {
@@ -93,7 +112,8 @@ class TaskListPresenter(private val viewInterface: TaskListContract.ViewInterfac
     }
 
     private fun updateList() {
-        val taskList: List<Task> = model.getCopyList()
+        val taskMapper = TaskMapper()
+        val taskList: List<TaskDataView> = model.getCopyList().map { taskMapper.mapFromEntity(it) }.toList()
         if (taskList.isEmpty()) {
             viewInterface.setEmptyTextMessageVisibility(true)
             viewInterface.setListVisibility(false)
@@ -104,10 +124,19 @@ class TaskListPresenter(private val viewInterface: TaskListContract.ViewInterfac
         }
     }
 
+    private fun setupToDoTaskInputText() {
+        if (inputState == InputState.ADD) {
+            viewInterface.setToDoTaskInputText(editTextString)
+        } else {
+            viewInterface.setToDoTaskInputText(model.getEditableTaskMessage())
+        }
+    }
+
     private fun showContent() {
         updateList()
         setupButtonLogic()
         viewInterface.setMainButtonClickable(editTextString.isNotEmpty())
+        setupToDoTaskInputText()
         changeButtonText()
     }
 
