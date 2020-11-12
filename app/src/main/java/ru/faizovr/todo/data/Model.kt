@@ -1,29 +1,53 @@
 package ru.faizovr.todo.data
 
 class Model {
-    private val taskList: MutableList<Task> = mutableListOf()
 
-    fun getMyList(): List<Task> = taskList
+    private val taskList: MutableList<Task> = mutableListOf()
+    private var id: Long = 0
+    private var editablePosition: Int = -1
+
+    fun getMyList(): List<Task> =
+            taskList
 
     fun addTask(message: String) {
-        val newTask = Task(id, message)
-        id++
+        val newTask = Task(id++, message)
         taskList.add(newTask)
     }
 
-    fun swapTask(task: Task, toPosition: Int) {
-        val taskPosition = taskList.indexOf(task)
-        taskList[taskPosition] = taskList[toPosition]
-        taskList[toPosition] = task
+    fun swapTask(fromPosition: Int, toPosition: Int) {
+        if (fromPosition in 0 until taskList.size && toPosition in 0 until taskList.size) {
+            val temp: Task = taskList[fromPosition]
+            taskList[fromPosition] = taskList[toPosition]
+            taskList[toPosition] = temp
+        }
     }
 
-    fun deleteTask(task: Task) {
-        taskList.remove(task)
+    fun getEditableTaskPosition(): Int =
+            editablePosition
+
+    fun getEditableTaskMessage(): String =
+            taskList[getEditableTaskPosition()].message
+
+    fun setTaskState(position: Int, taskState: TaskState) {
+        if (position in 0 until taskList.size) {
+            taskList[position].taskState = taskState
+            editablePosition = if (taskState == TaskState.EDIT)
+                position
+            else
+                -1
+        }
     }
 
-    fun isContain(task: Task) : Boolean = taskList.contains(task)
-
-    companion object {
-        private var id: Long = 0
+    fun deleteTask(position: Int) {
+        if (position in 0 until taskList.size)
+            taskList.removeAt(position)
     }
+
+    fun setTaskMessage(position: Int, message: String) {
+        if (position in 0 until taskList.size)
+            taskList[position].message = message
+    }
+
+    fun getCopyList(): List<Task> =
+            taskList.map(Task::copy)
 }

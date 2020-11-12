@@ -3,10 +3,10 @@ package ru.faizovr.todo
 import android.app.Application
 import ru.faizovr.todo.data.Model
 
-class ToDoApplication: Application() {
+class ToDoApplication : Application() {
 
     lateinit var model: Model
-    private set
+        private set
 
     override fun onCreate() {
         super.onCreate()

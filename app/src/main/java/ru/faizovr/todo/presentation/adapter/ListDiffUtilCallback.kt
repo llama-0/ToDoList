@@ -1,7 +1,6 @@
 package ru.faizovr.todo.presentation.adapter
 
 import android.os.Bundle
-import android.util.Log
 import androidx.recyclerview.widget.DiffUtil
 import ru.faizovr.todo.data.Task
 
@@ -11,24 +10,27 @@ class ListDiffUtilCallback(private val oldList: List<Task>, private val newList:
 
     override fun getNewListSize(): Int = newList.size
 
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].id == newList[newItemPosition].id
-    }
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+            oldList[oldItemPosition].id == newList[newItemPosition].id
 
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        Log.d(TAG, "areContentsTheSame: ${oldList[oldItemPosition].message} ${newList[newItemPosition].message}")
-        return oldList[oldItemPosition] == newList[newItemPosition]
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean = when {
+        oldList[oldItemPosition].message == newList[newItemPosition].message -> false
+        oldList[oldItemPosition].taskState == newList[newItemPosition].taskState -> false
+        else -> true
     }
 
     override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
         val newTask: Task = newList[newItemPosition]
         val oldTask: Task = oldList[oldItemPosition]
-        Log.d(TAG, "getChangePayload: ")
         val diff: Bundle = Bundle()
-        Log.d(TAG, "getChangePayload: ${newTask.message} ${oldTask.message}")
+        if (oldItemPosition != newItemPosition) {
+            diff.putInt(ToDoTaskAdapter.KEY_NEW_POSITION, newItemPosition)
+        }
         if (newTask.message != oldTask.message) {
-            Log.d(TAG, "getChangePayload: added to Bundle")
-            diff.putString("Message", newTask.message)
+            diff.putString(ToDoTaskAdapter.KEY_MESSAGE, newTask.message)
+        }
+        if (newTask.taskState != oldTask.taskState) {
+            diff.putString(ToDoTaskAdapter.KEY_TASK_STATE, newTask.taskState.toString())
         }
         return diff
     }
@@ -37,5 +39,4 @@ class ListDiffUtilCallback(private val oldList: List<Task>, private val newList:
         @Suppress("unused")
         private const val TAG = "getChangePayload"
     }
-
 }
