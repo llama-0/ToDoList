@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">TODO</string>
+    <string name="app_name">ToDo List</string>
     <string name="action_add_task">Добавить</string>
     <string name="hint_add_task">Например, учить испанский сегодня</string>
     <string name="message_empty_string">Список дел пуст</string>

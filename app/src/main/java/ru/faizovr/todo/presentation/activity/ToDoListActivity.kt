@@ -49,15 +49,9 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
         ItemTouchHelper(TaskTouchHelper(taskListPresenter)).attachToRecyclerView(lists_recycler_view)
     }
 
-    override fun setAddFuncToMainButton() {
+    override fun setFuncToMainButton() {
         button_main.setOnClickListener {
-            taskListPresenter.buttonAddTaskClicked(edit_text_add.text.toString())
-        }
-    }
-
-    override fun setEditFuncToMainButton() {
-        button_main.setOnClickListener {
-            taskListPresenter.buttonEditTaskClicked(edit_text_add.text.toString())
+            taskListPresenter.onMainButtonClicked(edit_text_add.text.toString())
         }
     }
 
