@@ -41,7 +41,7 @@
             android:layout_gravity="end|center_vertical"
             android:layout_margin="@dimen/spacing_small_8"
             android:background="#00FFFFFF"
-            tools:src="@drawable/ic_round_edit_48"
+            tools:src="@drawable/ic_round_inactive_32"
             tools:ignore="ContentDescription" />
 
     </FrameLayout>

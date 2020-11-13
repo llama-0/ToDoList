@@ -106,16 +106,24 @@ class TaskListPresenter(private val viewInterface: TaskListContract.ViewInterfac
         viewInterface.setMainButtonClickable(message.isNotEmpty())
     }
 
+    private fun showList(taskList: List<TaskDataView>) {
+        viewInterface.setEmptyTextMessageVisibility(false)
+        viewInterface.setListVisibility(true)
+        viewInterface.updateList(taskList)
+    }
+
+    private fun showText() {
+        viewInterface.setEmptyTextMessageVisibility(true)
+        viewInterface.setListVisibility(false)
+    }
+
     private fun updateList() {
         val taskMapper = TaskMapper()
         val taskList: List<TaskDataView> = model.getCopyList().map { taskMapper.mapFromEntity(it) }.toList()
-        if (taskList.isEmpty()) {
-            viewInterface.setEmptyTextMessageVisibility(true)
-            viewInterface.setListVisibility(false)
+        if (taskList.isNotEmpty()) {
+            showList(taskList)
         } else {
-            viewInterface.setEmptyTextMessageVisibility(false)
-            viewInterface.setListVisibility(true)
-            viewInterface.updateList(taskList)
+            showText()
         }
     }
 

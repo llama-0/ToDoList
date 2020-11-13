@@ -16,9 +16,9 @@ class TaskMapper : EntityMapper<Task, TaskDataView> {
                 id = entity.id,
                 message = entity.message,
                 editButtonImageId = when (entity.taskState) {
-                    TaskState.DEFAULT -> R.drawable.ic_round_edit_48
-                    TaskState.COMPLETE -> R.drawable.ic_round_edit_48
-                    TaskState.EDIT -> R.drawable.ic_round_close_48
+                    TaskState.DEFAULT -> R.drawable.ic_round_inactive_32
+                    TaskState.COMPLETE -> R.drawable.ic_round_inactive_32
+                    TaskState.EDIT -> R.drawable.ic_round_inactive_32
                 }
         )
     }
