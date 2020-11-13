@@ -1,6 +1,5 @@
 package ru.faizovr.todo.presentation.presenter
 
-import android.util.Log
 import ru.faizovr.todo.data.Model
 import ru.faizovr.todo.data.Task
 import ru.faizovr.todo.data.TaskState
@@ -138,10 +137,5 @@ class TaskListPresenter(private val viewInterface: TaskListContract.ViewInterfac
         viewInterface.setMainButtonClickable(editTextString.isNotEmpty())
         setupToDoTaskInputText()
         changeButtonText()
-    }
-
-    companion object {
-        @Suppress("unused")
-        private const val TAG = "MainPresenter"
     }
 }

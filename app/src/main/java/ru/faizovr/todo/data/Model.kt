@@ -1,5 +1,4 @@
 package ru.faizovr.todo.data
-
 class Model {
 
     private val taskList: MutableList<Task> = mutableListOf()
@@ -25,8 +24,12 @@ class Model {
     fun getEditableTaskPosition(): Int =
             editablePosition
 
-    fun getEditableTaskMessage(): String =
+    fun getEditableTaskMessage(): String {
+        return if (getEditableTaskPosition() in 0 until taskList.size)
             taskList[getEditableTaskPosition()].message
+        else
+            ""
+    }
 
     fun setTaskState(position: Int, taskState: TaskState) {
         if (position in 0 until taskList.size) {
@@ -58,3 +61,4 @@ class Model {
     fun getCopyList(): List<Task> =
             taskList.map(Task::copy)
 }
+
