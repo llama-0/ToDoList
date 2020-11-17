@@ -26,16 +26,23 @@
 
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <EditText
-        android:id="@+id/edit_text_add"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_text_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/spacing_normal_16"
-        android:hint="@string/hint_add_task"
-        android:inputType="text"
-        app:layout_constraintStart_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_task_list_activity"
-        tools:ignore="Autofill" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_task_list_activity">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing_normal_16"
+            android:hint="@string/hint_add_task"
+            android:imeOptions="actionDone"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/button_main"
@@ -45,7 +52,7 @@
         android:layout_marginEnd="@dimen/spacing_normal_16"
         android:clickable="false"
         android:text="@string/action_add_task"
-        app:layout_constraintTop_toBottomOf="@id/edit_text_add" />
+        app:layout_constraintTop_toBottomOf="@id/edit_text_layout" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lists_recycler_view"

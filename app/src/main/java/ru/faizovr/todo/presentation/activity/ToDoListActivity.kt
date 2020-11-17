@@ -2,7 +2,6 @@ package ru.faizovr.todo.presentation.activity
 
 import android.app.Activity
 import android.os.Bundle
-import android.util.Log
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ItemTouchHelper
 import kotlinx.android.synthetic.main.activity_main.*
@@ -62,7 +61,7 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
     }
 
     override fun clearEditText() {
-        edit_text_add.text.clear()
+        edit_text_add.text?.clear()
     }
 
     override fun setMainButtonClickable(isClickable: Boolean) {
