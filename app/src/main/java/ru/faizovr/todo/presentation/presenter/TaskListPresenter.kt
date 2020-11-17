@@ -1,6 +1,5 @@
 package ru.faizovr.todo.presentation.presenter
 
-import android.util.Log
 import ru.faizovr.todo.domain.model.Model
 import ru.faizovr.todo.domain.model.Task
 import ru.faizovr.todo.domain.model.TaskState
@@ -16,7 +15,6 @@ class TaskListPresenter(private val viewInterface: TaskListContract.ViewInterfac
     private var inputState: InputState = InputState.ADD
 
     override fun init() {
-        Log.d(TAG, "init: ")
         viewInterface.setFuncToMainButton()
         setupInputState()
         showContent()
@@ -30,20 +28,17 @@ class TaskListPresenter(private val viewInterface: TaskListContract.ViewInterfac
     }
 
     private fun deleteTask(position: Int) {
-        Log.d(TAG, "deleteTask: ")
         if (model.getMyList().size > position) {
             model.deleteTask(position)
         }
     }
 
     override fun listItemMoved(fromPosition: Int, toPosition: Int) {
-        Log.d(TAG, "listItemMoved: ")
         model.swapTask(fromPosition, toPosition)
         showContent()
     }
 
     override fun listItemSwiped(position: Int) {
-        Log.d(TAG, "listItemSwiped: ")
         if (inputState == InputState.EDIT && position == model.getEditableTaskPosition()) {
             inputState = InputState.ADD
             viewInterface.setToDoTaskInputText(editTextString)
@@ -53,7 +48,6 @@ class TaskListPresenter(private val viewInterface: TaskListContract.ViewInterfac
     }
 
     override fun onMainButtonClicked(message: String) {
-        Log.d(TAG, "onMainButtonClicked: ")
         if (inputState == InputState.ADD) {
             model.addTask(message)
             editTextString = ""
@@ -68,12 +62,10 @@ class TaskListPresenter(private val viewInterface: TaskListContract.ViewInterfac
     }
 
     private fun setupButtonLogic() {
-        Log.d(TAG, "setupButtonLogic: ")
         viewInterface.setMainButtonClickable(editTextString.isNotEmpty())
     }
 
     private fun changeButtonText() {
-        Log.d(TAG, "changeButtonText: ")
         if (inputState == InputState.ADD)
             viewInterface.setAddTextToMainButton()
         else
@@ -81,7 +73,6 @@ class TaskListPresenter(private val viewInterface: TaskListContract.ViewInterfac
     }
 
     override fun onEditTaskClickedForPosition(position: Int) {
-        Log.d(TAG, "onEditTaskClickedForPosition: ")
         if (inputState == InputState.ADD) {
             inputState = InputState.EDIT
             model.setTaskState(position, TaskState.EDIT)
@@ -98,7 +89,6 @@ class TaskListPresenter(private val viewInterface: TaskListContract.ViewInterfac
     }
 
     override fun onCheckBoxTaskClickedForPosition(position: Int) {
-        Log.d(TAG, "onCheckBoxTaskClickedForPosition: ")
         val taskAtPosition: Task? = model.getTaskFromPosition(position)
         if (taskAtPosition != null) {
             when (taskAtPosition.taskState) {
@@ -118,7 +108,6 @@ class TaskListPresenter(private val viewInterface: TaskListContract.ViewInterfac
     }
 
     override fun onTaskMessageInputTextChanged(message: String) {
-        Log.d(TAG, "onTaskMessageInputTextChanged: ")
         if (inputState == InputState.ADD) {
             editTextString = message
         }
@@ -126,25 +115,21 @@ class TaskListPresenter(private val viewInterface: TaskListContract.ViewInterfac
     }
 
     override fun onSaveInstanceState() {
-        Log.d(TAG, "onSaveInstanceState: ")
         model.setDataToSharedPreference()
     }
 
     private fun showList(taskList: List<TaskDataView>) {
-        Log.d(TAG, "showList: ")
         viewInterface.setEmptyTextMessageVisibility(false)
         viewInterface.setListVisibility(true)
         viewInterface.updateList(taskList)
     }
 
     private fun showText() {
-        Log.d(TAG, "showText: ")
         viewInterface.setEmptyTextMessageVisibility(true)
         viewInterface.setListVisibility(false)
     }
 
     private fun updateList() {
-        Log.d(TAG, "updateList: ")
         val taskMapper = TaskMapper()
         val taskList: List<TaskDataView> = model.getCopyList().map { taskMapper.mapFromEntity(it) }.toList()
         if (taskList.isNotEmpty()) {
@@ -155,7 +140,6 @@ class TaskListPresenter(private val viewInterface: TaskListContract.ViewInterfac
     }
 
     private fun setupToDoTaskInputText() {
-        Log.d(TAG, "setupToDoTaskInputText: ")
         if (inputState == InputState.ADD) {
             viewInterface.setToDoTaskInputText(editTextString)
         } else {
@@ -164,7 +148,6 @@ class TaskListPresenter(private val viewInterface: TaskListContract.ViewInterfac
     }
 
     private fun showContent() {
-        Log.d(TAG, "showContent: ")
         updateList()
         setupButtonLogic()
         viewInterface.setMainButtonClickable(editTextString.isNotEmpty())
