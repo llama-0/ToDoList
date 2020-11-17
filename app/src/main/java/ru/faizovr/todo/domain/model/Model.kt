@@ -16,7 +16,7 @@ class Model(private val prefs: SharedPreferences) {
 
     private fun getDataFromSharedPreference() {
         val jsonString = prefs.getString(PREFS_TASK_LIST_KEY, "")
-        val type = object : TypeToken<List<Task>>(){}.type
+        val type = object : TypeToken<List<Task>>() {}.type
         taskList = Gson().fromJson<MutableList<Task>>(jsonString, type) ?: mutableListOf()
         id = prefs.getLong(PREFS_ID_KEY, id)
         editablePosition = prefs.getInt(PREFS_EDITABLE_POSITION_KEY, editablePosition)

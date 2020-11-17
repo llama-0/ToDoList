@@ -23,7 +23,7 @@ class TaskListPresenter(private val viewInterface: TaskListContract.ViewInterfac
     }
 
     private fun setupInputState() {
-        val task =  model.getMyList().find { it.taskState == TaskState.EDIT }
+        val task = model.getMyList().find { it.taskState == TaskState.EDIT }
         if (task != null) {
             inputState = InputState.EDIT
         }
@@ -58,7 +58,7 @@ class TaskListPresenter(private val viewInterface: TaskListContract.ViewInterfac
             model.addTask(message)
             editTextString = ""
             viewInterface.clearEditText()
-        } else  {
+        } else {
             model.setTaskMessage(model.getEditableTaskPosition(), message)
             model.setTaskState(model.getEditableTaskPosition(), TaskState.DEFAULT)
             viewInterface.setToDoTaskInputText(editTextString)
@@ -171,7 +171,7 @@ class TaskListPresenter(private val viewInterface: TaskListContract.ViewInterfac
         setupToDoTaskInputText()
         changeButtonText()
     }
-    
+
     companion object {
         private const val TAG = "TaskListPresenter"
     }

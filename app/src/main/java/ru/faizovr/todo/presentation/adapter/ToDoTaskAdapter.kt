@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.faizovr.todo.R
 import ru.faizovr.todo.presentation.viewholder.TaskDataView
 import ru.faizovr.todo.presentation.viewholder.TaskViewHolder
-import kotlin.collections.ArrayList
 
 class ToDoTaskAdapter(private val onEditButtonClickListener: (position: Int) -> Unit,
                       private val onCheckBoxClickListener: (position: Int) -> Unit) :
