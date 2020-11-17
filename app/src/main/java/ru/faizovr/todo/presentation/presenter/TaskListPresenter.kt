@@ -154,8 +154,4 @@ class TaskListPresenter(private val viewInterface: TaskListContract.ViewInterfac
         setupToDoTaskInputText()
         changeButtonText()
     }
-
-    companion object {
-        private const val TAG = "TaskListPresenter"
-    }
 }
