@@ -1,8 +1,8 @@
 package ru.faizovr.todo.presentation.mapper
 
 import ru.faizovr.todo.R
-import ru.faizovr.todo.data.Task
-import ru.faizovr.todo.data.TaskState
+import ru.faizovr.todo.domain.model.Task
+import ru.faizovr.todo.domain.model.TaskState
 import ru.faizovr.todo.presentation.viewholder.TaskDataView
 
 class TaskMapper : EntityMapper<Task, TaskDataView> {

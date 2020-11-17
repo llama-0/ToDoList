@@ -2,6 +2,7 @@ package ru.faizovr.todo.presentation.activity
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ItemTouchHelper
 import kotlinx.android.synthetic.main.activity_main.*
@@ -34,9 +35,14 @@ class ToDoListActivity : Activity(), TaskListContract.ViewInterface {
         setupHelpers()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        taskListPresenter.onSaveInstanceState()
+    }
+
     private fun setupPresenter() {
         val app: ToDoApplication = application as ToDoApplication
-        taskListPresenter = TaskListPresenter(viewInterface = this, model = app.model)
+        taskListPresenter = TaskListPresenter(this, app.model)
         taskListPresenter.init()
     }
 

@@ -24,5 +24,6 @@ interface TaskListContract {
         fun listItemSwiped(position: Int)
         fun onMainButtonClicked(message: String)
         fun onTaskMessageInputTextChanged(message: String)
+        fun onSaveInstanceState()
     }
 }

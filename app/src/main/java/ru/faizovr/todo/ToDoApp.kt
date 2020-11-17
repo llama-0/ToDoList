@@ -1,7 +1,9 @@
 package ru.faizovr.todo
 
 import android.app.Application
-import ru.faizovr.todo.data.Model
+import android.content.SharedPreferences
+import android.util.Log
+import ru.faizovr.todo.domain.model.Model
 
 class ToDoApplication : Application() {
 
@@ -14,6 +16,12 @@ class ToDoApplication : Application() {
     }
 
     private fun setupModel() {
-        model = Model()
+        val sharedPreferences: SharedPreferences = getSharedPreferences(PREFERENCES, 0)
+        Log.d("TODOAPP", "setupModel: ")
+        model = Model(sharedPreferences)
+    }
+
+    companion object {
+        private const val PREFERENCES = "app_preferences"
     }
 }

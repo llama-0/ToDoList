@@ -1,13 +1,18 @@
 package ru.faizovr.todo.data
 
+
+import com.nhaarman.mockitokotlin2.mock
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import ru.faizovr.todo.domain.model.Model
+import ru.faizovr.todo.domain.model.Task
+import ru.faizovr.todo.domain.model.TaskState
 
 
 class ModelTest {
 
-    private val model = Model()
+    private val model = Model(mock())
 
     @Before
     fun before() {
