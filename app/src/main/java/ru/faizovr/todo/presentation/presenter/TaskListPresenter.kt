@@ -150,7 +150,6 @@ class TaskListPresenter(private val viewInterface: TaskListContract.ViewInterfac
     private fun showContent() {
         updateList()
         setupButtonLogic()
-        viewInterface.setMainButtonClickable(editTextString.isNotEmpty())
         setupToDoTaskInputText()
         changeButtonText()
     }
