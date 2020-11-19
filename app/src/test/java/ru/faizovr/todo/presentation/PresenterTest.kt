@@ -7,6 +7,7 @@ import org.mockito.Mockito.verify
 import ru.faizovr.todo.domain.model.Model
 import ru.faizovr.todo.domain.model.Task
 import ru.faizovr.todo.domain.model.TaskState
+import ru.faizovr.todo.presentation.contract.TaskListContract
 import ru.faizovr.todo.presentation.presenter.TaskListPresenter
 
 class PresenterTest {
@@ -54,7 +55,7 @@ class PresenterTest {
 
     @Test
     fun `onMainButtonClicked when add state`() {
-        presenter.onMainButtonClicked("Test")
+        presenter.onMainButtonClicked()
 
         verify(model).addTask("Test")
         verify(view).clearEditText()

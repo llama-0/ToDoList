@@ -2,7 +2,7 @@ package ru.faizovr.todo.presentation.touchhelper
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import ru.faizovr.todo.presentation.TaskListContract
+import ru.faizovr.todo.presentation.contract.TaskListContract
 
 class TaskTouchHelper(private val taskListPresenter: TaskListContract.PresenterInterface) : ItemTouchHelper.Callback() {
 
@@ -20,7 +20,10 @@ class TaskTouchHelper(private val taskListPresenter: TaskListContract.PresenterI
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int): Unit =
             taskListPresenter.listItemSwiped(viewHolder.adapterPosition)
 
-    override fun isLongPressDragEnabled(): Boolean = true
+    override fun isLongPressDragEnabled(): Boolean =
+            true
 
-    override fun isItemViewSwipeEnabled(): Boolean = true
+    override fun isItemViewSwipeEnabled(): Boolean =
+            true
 }
+

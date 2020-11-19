@@ -10,41 +10,35 @@
     android:focusable="true"
     android:foreground="?selectableItemBackground">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <CheckBox
+        android:id="@+id/checkbox_is_complete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/spacing_normal_16"
+        android:layout_marginEnd="@dimen/spacing_normal_16" />
 
-        <CheckBox
-            android:id="@+id/checkbox_is_complete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/spacing_normal_16"
-            android:layout_marginEnd="@dimen/spacing_normal_16" />
+    <TextView
+        android:id="@+id/text_task"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_very_huge"
+        android:layout_marginTop="@dimen/spacing_normal_16"
+        android:layout_marginEnd="@dimen/spacing_text_end"
+        android:layout_marginBottom="@dimen/spacing_normal_16"
+        android:textSize="@dimen/text_size_tittle"
+        tools:text="Task tittle" />
 
-        <TextView
-            android:id="@+id/text_task"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_very_huge"
-            android:layout_marginTop="@dimen/spacing_normal_16"
-            android:layout_marginEnd="@dimen/spacing_text_end"
-            android:layout_marginBottom="@dimen/spacing_normal_16"
-            android:textSize="@dimen/text_size_tittle"
-            tools:text="Task tittle" />
-
-        <ImageButton
-            android:id="@+id/button_edit_task"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/spacing_small_8"
-            android:layout_gravity="end|center_vertical"
-            android:layout_margin="@dimen/spacing_small_8"
-            android:background="#00FFFFFF"
-            tools:src="@drawable/ic_round_inactive_32"
-            tools:ignore="ContentDescription" />
-
-    </FrameLayout>
+    <ImageButton
+        android:id="@+id/button_edit_task"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|center_vertical"
+        android:layout_margin="@dimen/spacing_small_8"
+        android:background="#00FFFFFF"
+        android:padding="@dimen/spacing_small_8"
+        tools:ignore="ContentDescription"
+        tools:src="@drawable/ic_round_inactive_32" />
 
 
 </androidx.cardview.widget.CardView>

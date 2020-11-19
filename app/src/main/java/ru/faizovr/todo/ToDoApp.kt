@@ -1,8 +1,8 @@
 package ru.faizovr.todo
 
 import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import ru.faizovr.todo.domain.model.Model
 
 class ToDoApplication : Application() {
@@ -16,8 +16,7 @@ class ToDoApplication : Application() {
     }
 
     private fun setupModel() {
-        val sharedPreferences: SharedPreferences = getSharedPreferences(PREFERENCES, 0)
-        Log.d("TODOAPP", "setupModel: ")
+        val sharedPreferences: SharedPreferences = getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
         model = Model(sharedPreferences)
     }
 

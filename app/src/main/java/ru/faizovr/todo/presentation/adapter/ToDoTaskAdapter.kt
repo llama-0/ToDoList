@@ -11,8 +11,11 @@ import ru.faizovr.todo.R
 import ru.faizovr.todo.presentation.viewholder.TaskDataView
 import ru.faizovr.todo.presentation.viewholder.TaskViewHolder
 
-class ToDoTaskAdapter(private val onEditButtonClickListener: (position: Int) -> Unit,
-                      private val onCheckBoxClickListener: (position: Int) -> Unit) :
+class ToDoTaskAdapter(
+        private val onEditButtonClickListener: (position: Int) -> Unit,
+        private val onCheckBoxClickListener: (position: Int) -> Unit,
+        private val onTaskClickListener: (position: Int) -> Unit
+) :
         RecyclerView.Adapter<TaskViewHolder>() {
 
     private var taskList: List<TaskDataView> = ArrayList()
@@ -25,13 +28,14 @@ class ToDoTaskAdapter(private val onEditButtonClickListener: (position: Int) -> 
 
     fun updateList(newList: List<TaskDataView>) {
         val diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(ListDiffUtilCallback(taskList, newList))
-        Log.d(TAG, "updateList: old ${taskList.map { it.message }}")
-        Log.d(TAG, "updateList: new ${newList.map { it.message }}")
+        Log.d(TAG, "updateList: old ${taskList.map(TaskDataView::message)}")
+        Log.d(TAG, "updateList: new ${newList.map(TaskDataView::message)}")
         taskList = newList
         diffResult.dispatchUpdatesTo(this)
     }
 
-    override fun getItemCount(): Int = taskList.size
+    override fun getItemCount(): Int =
+            taskList.size
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int, payloads: MutableList<Any>) {
         if (payloads.isEmpty()) {
@@ -42,7 +46,7 @@ class ToDoTaskAdapter(private val onEditButtonClickListener: (position: Int) -> 
                 when (key) {
                     KEY_CHECKBOX -> holder.setState(bundle.getBoolean(KEY_CHECKBOX))
                     KEY_MESSAGE -> holder.setMessage(bundle.getString(KEY_MESSAGE).toString())
-                    KEY_NEW_POSITION -> holder.setOnClickListeners(onEditButtonClickListener, onCheckBoxClickListener, position)
+                    KEY_NEW_POSITION -> holder.setOnClickListeners(onEditButtonClickListener, onCheckBoxClickListener, onTaskClickListener, position)
                     KEY_IMAGE -> holder.setImage(bundle.getInt(KEY_IMAGE))
                 }
             }
@@ -50,7 +54,7 @@ class ToDoTaskAdapter(private val onEditButtonClickListener: (position: Int) -> 
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int): Unit =
-            holder.bind(taskList[position], position, onEditButtonClickListener, onCheckBoxClickListener)
+            holder.bind(taskList[position], position, onEditButtonClickListener, onCheckBoxClickListener, onTaskClickListener)
 
     companion object {
         private const val TAG = "ListRecyclerViewAdapter"

@@ -2,7 +2,7 @@ package ru.faizovr.todo.presentation.textwatcher
 
 import android.text.Editable
 import android.text.TextWatcher
-import ru.faizovr.todo.presentation.TaskListContract
+import ru.faizovr.todo.presentation.contract.TaskListContract
 
 class MessageInputTextWatcher(private val taskListPresenter: TaskListContract.PresenterInterface) : TextWatcher {
     override fun afterTextChanged(s: Editable?): Unit = Unit

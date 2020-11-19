@@ -6,23 +6,25 @@ import com.google.gson.reflect.TypeToken
 
 class Model(private val prefs: SharedPreferences) {
 
-    private var taskList: MutableList<Task> = mutableListOf()
+    private val taskList: MutableList<Task> = mutableListOf()
     private var id: Long = 0
     private var editablePosition: Int = -1
 
     init {
-        getDataFromSharedPreference()
+        loadDataFromSharedPreference()
     }
 
-    private fun getDataFromSharedPreference() {
+    private fun loadDataFromSharedPreference() {
         val jsonString = prefs.getString(PREFS_TASK_LIST_KEY, "")
         val type = object : TypeToken<List<Task>>() {}.type
-        taskList = Gson().fromJson<MutableList<Task>>(jsonString, type) ?: mutableListOf()
+        val taskList = Gson().fromJson<MutableList<Task>>(jsonString, type) ?: mutableListOf()
+        this.taskList.clear()
+        this.taskList.addAll(taskList)
         id = prefs.getLong(PREFS_ID_KEY, id)
         editablePosition = prefs.getInt(PREFS_EDITABLE_POSITION_KEY, editablePosition)
     }
 
-    fun setDataToSharedPreference() {
+    fun saveDataToSharedPreference() {
         val editor: SharedPreferences.Editor = prefs.edit()
         val jsonString: String = Gson().toJson(taskList)
         editor.putString(PREFS_TASK_LIST_KEY, jsonString)
@@ -39,13 +41,17 @@ class Model(private val prefs: SharedPreferences) {
         taskList.add(newTask)
     }
 
+    private fun updateEditablePosition(fromPosition: Int, toPosition: Int) {
+        if (taskList[fromPosition].taskState == TaskState.EDIT) {
+            editablePosition = toPosition
+        } else if (taskList[toPosition].taskState == TaskState.EDIT) {
+            editablePosition = fromPosition
+        }
+    }
+
     fun swapTask(fromPosition: Int, toPosition: Int) {
         if (fromPosition in 0 until taskList.size && toPosition in 0 until taskList.size) {
-            if (taskList[fromPosition].taskState == TaskState.EDIT) {
-                editablePosition = toPosition
-            } else if (taskList[toPosition].taskState == TaskState.EDIT) {
-                editablePosition = fromPosition
-            }
+            updateEditablePosition(fromPosition, toPosition)
             val temp: Task = taskList[fromPosition]
             taskList[fromPosition] = taskList[toPosition]
             taskList[toPosition] = temp
@@ -72,6 +78,8 @@ class Model(private val prefs: SharedPreferences) {
     }
 
     fun deleteTask(position: Int) {
+        if (editablePosition == position)
+            editablePosition = -1
         if (position in 0 until taskList.size)
             taskList.removeAt(position)
     }
@@ -81,12 +89,11 @@ class Model(private val prefs: SharedPreferences) {
             taskList[position].message = message
     }
 
-    fun getTaskFromPosition(position: Int): Task? {
-        if (position in 0 until taskList.size) {
-            return taskList[position]
-        }
-        return null
-    }
+    fun getTaskFromPosition(position: Int): Task? =
+            if (position in 0 until taskList.size)
+                taskList[position]
+            else
+                null
 
     fun getCopyList(): List<Task> =
             taskList.map(Task::copy)

@@ -24,19 +24,33 @@ class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         itemView.button_edit_task.setImageResource(imageId)
     }
 
-    fun setOnClickListeners(onEditButtonClickListener: (position: Int) -> Unit, onCheckBoxClickListener: (position: Int) -> Unit, position: Int) {
+    fun setOnClickListeners(
+            onEditButtonClickListener: (position: Int) -> Unit,
+            onCheckBoxClickListener: (position: Int) -> Unit,
+            onTaskClickListener: (position: Int) -> Unit,
+            position: Int
+    ) {
         itemView.button_edit_task.setOnClickListener {
             onEditButtonClickListener(position)
         }
         itemView.checkbox_is_complete.setOnClickListener {
             onCheckBoxClickListener(position)
         }
+        itemView.setOnClickListener {
+            onTaskClickListener(position)
+        }
     }
 
-    fun bind(task: TaskDataView, position: Int, onEditButtonClickListener: (position: Int) -> Unit, onCheckBoxClickListener: (position: Int) -> Unit) {
+    fun bind(
+            task: TaskDataView,
+            position: Int,
+            onEditButtonClickListener: (position: Int) -> Unit,
+            onCheckBoxClickListener: (position: Int) -> Unit,
+            onTaskClickListener: (position: Int) -> Unit
+    ) {
         setState(task.isCheckBoxActive)
         setMessage(task.message)
         setImage(task.editButtonImageId)
-        setOnClickListeners(onEditButtonClickListener, onCheckBoxClickListener, position)
+        setOnClickListeners(onEditButtonClickListener, onCheckBoxClickListener, onTaskClickListener, position)
     }
 }
