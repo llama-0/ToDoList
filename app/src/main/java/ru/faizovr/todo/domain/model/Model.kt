@@ -1,8 +1,5 @@
 package ru.faizovr.todo.domain.model
 
-import android.content.SharedPreferences
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import ru.faizovr.todo.data.Repository
 
 class Model(private val repository: Repository) {
@@ -37,7 +34,7 @@ class Model(private val repository: Repository) {
         taskList.add(newTask)
     }
 
-    private fun updateEditablePosition(fromPosition: Int, toPosition: Int) {
+    private fun swapEditableTask(fromPosition: Int, toPosition: Int) {
         if (taskList[fromPosition].taskState == TaskState.EDIT) {
             editablePosition = toPosition
         } else if (taskList[toPosition].taskState == TaskState.EDIT) {
@@ -47,7 +44,7 @@ class Model(private val repository: Repository) {
 
     fun swapTask(fromPosition: Int, toPosition: Int) {
         if (fromPosition in 0 until taskList.size && toPosition in 0 until taskList.size) {
-            updateEditablePosition(fromPosition, toPosition)
+            swapEditableTask(fromPosition, toPosition)
             val temp: Task = taskList[fromPosition]
             taskList[fromPosition] = taskList[toPosition]
             taskList[toPosition] = temp
