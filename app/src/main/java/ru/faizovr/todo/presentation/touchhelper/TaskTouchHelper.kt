@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import ru.faizovr.todo.presentation.contract.TaskListContract
 
-class TaskTouchHelper(private val taskListPresenter: TaskListContract.PresenterInterface) : ItemTouchHelper.Callback() {
+class TaskTouchHelper(private val taskListPresenter: TaskListContract.Presenter) : ItemTouchHelper.Callback() {
 
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
         val dragFlags: Int = ItemTouchHelper.UP or ItemTouchHelper.DOWN

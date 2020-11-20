@@ -2,11 +2,11 @@ package ru.faizovr.todo.presentation.contract
 
 interface TaskContract {
 
-    interface view {
-
+    interface View {
+        fun showTaskMessage(message: String)
     }
 
-    interface presenter {
+    interface Presenter {
         fun init()
     }
 }

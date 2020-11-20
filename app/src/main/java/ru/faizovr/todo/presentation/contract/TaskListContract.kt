@@ -4,7 +4,7 @@ import ru.faizovr.todo.presentation.viewholder.TaskDataView
 
 interface TaskListContract {
 
-    interface ViewInterface {
+    interface View {
         fun setFuncToMainButton()
         fun updateList(taskList: List<TaskDataView>)
         fun setMainButtonClickable(isClickable: Boolean)
@@ -15,10 +15,10 @@ interface TaskListContract {
         fun setAddTextToMainButton()
         fun setEditTextToMainButton()
         fun clearEditText()
-        fun showTaskFragment(message: String)
+        fun showTaskFragment(taskDataView: TaskDataView)
     }
 
-    interface PresenterInterface {
+    interface Presenter {
         fun onTaskClickedForPosition(position: Int)
         fun init()
         fun onCheckBoxTaskClickedForPosition(position: Int)

@@ -16,9 +16,9 @@ import ru.faizovr.todo.presentation.textwatcher.MessageInputTextWatcher
 import ru.faizovr.todo.presentation.touchhelper.TaskTouchHelper
 import ru.faizovr.todo.presentation.viewholder.TaskDataView
 
-class TaskListFragment : Fragment(R.layout.fragment_to_do_list), TaskListContract.ViewInterface {
+class TaskListFragment : Fragment(R.layout.fragment_to_do_list), TaskListContract.View {
 
-    private var taskListPresenter: TaskListContract.PresenterInterface? = null
+    private var taskListPresenter: TaskListContract.Presenter? = null
 
     private val onEditButtonClicked: (position: Int) -> Unit = { position: Int ->
         taskListPresenter?.onEditTaskClickedForPosition(position)
@@ -54,8 +54,8 @@ class TaskListFragment : Fragment(R.layout.fragment_to_do_list), TaskListContrac
         lists_recycler_view.adapter = ToDoTaskAdapter(onEditButtonClicked, onCheckBoxClicked, onTaskClicked)
     }
 
-    override fun showTaskFragment(message: String) {
-        val fragment: Fragment = TaskFragment(message)
+    override fun showTaskFragment(taskDataView: TaskDataView) {
+        val fragment: Fragment = TaskFragment(taskDataView)
         activity?.let {
             if (it is ToDoActivity)
                 it.goToFragment(fragment)

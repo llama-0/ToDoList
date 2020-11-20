@@ -13,7 +13,7 @@ import ru.faizovr.todo.presentation.presenter.TaskListPresenter
 class PresenterTest {
 
     private val model: Model = mock()
-    private val view: TaskListContract.ViewInterface = mock()
+    private val view: TaskListContract.View = mock()
     private val presenter = TaskListPresenter(view, model)
 
     @Test
