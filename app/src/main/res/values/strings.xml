@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">ToDo List</string>
     <string name="action_add_task">Add</string>
     <string name="hint_add_task">e.g, Read Book today</string>
     <string name="message_empty_string">Task List is empty</string>
     <string name="action_edit_task">Edit</string>
+    <string name="text_holder_lorem_ipsum" tools:ignore="Typos">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus nulla felis, pulvinar nec eros in, consectetur pulvinar tellus. Sed ipsum velit, malesuada bibendum ullamcorper a, vehicula at nibh. Vestibulum consequat interdum quam. In sit amet enim enim. Ut ornare laoreet lacinia. Vestibulum sodales turpis ut congue luctus. Nullam sed imperdiet massa, et ultrices turpis. Morbi sodales condimentum porttitor. Praesent ac convallis felis. Quisque quis tincidunt ligula, vitae tincidunt leo. Fusce sit amet vehicula justo, ut aliquet nulla. Integer ac sagittis nisl. Phasellus dictum ipsum eu rhoncus elementum. Mauris nec sem lobortis, vehicula mauris ut, convallis risus.</string>
 </resources>

@@ -5,7 +5,6 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_task.*
 import ru.faizovr.todo.R
-import ru.faizovr.todo.ToDoApplication
 import ru.faizovr.todo.presentation.contract.TaskContract
 import ru.faizovr.todo.presentation.presenter.TaskPresenter
 import ru.faizovr.todo.presentation.viewholder.TaskDataView

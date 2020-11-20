@@ -3,8 +3,9 @@ package ru.faizovr.todo.domain.model
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import ru.faizovr.todo.data.Repository
 
-class Model(private val prefs: SharedPreferences) {
+class Model(private val repository: Repository) {
 
     private val taskList: MutableList<Task> = mutableListOf()
     private var id: Long = 0
@@ -15,22 +16,17 @@ class Model(private val prefs: SharedPreferences) {
     }
 
     private fun loadDataFromSharedPreference() {
-        val jsonString = prefs.getString(PREFS_TASK_LIST_KEY, "")
-        val type = object : TypeToken<List<Task>>() {}.type
-        val taskList = Gson().fromJson<MutableList<Task>>(jsonString, type) ?: mutableListOf()
+        val taskList = repository.getListFromSharedPreference() as MutableList<Task>
         this.taskList.clear()
         this.taskList.addAll(taskList)
-        id = prefs.getLong(PREFS_ID_KEY, id)
-        editablePosition = prefs.getInt(PREFS_EDITABLE_POSITION_KEY, editablePosition)
+        id = repository.getIdFromSharedPreference()
+        editablePosition = repository.getEditablePositionFromSharedPreference()
     }
 
     fun saveDataToSharedPreference() {
-        val editor: SharedPreferences.Editor = prefs.edit()
-        val jsonString: String = Gson().toJson(taskList)
-        editor.putString(PREFS_TASK_LIST_KEY, jsonString)
-        editor.putLong(PREFS_ID_KEY, id)
-        editor.putInt(PREFS_EDITABLE_POSITION_KEY, editablePosition)
-        editor.apply()
+        repository.saveListToSharedPreference(taskList)
+        repository.saveEditablePositionToSharedPreference(editablePosition)
+        repository.saveIdToSharedPreference(id)
     }
 
     fun getMyList(): List<Task> =
@@ -97,11 +93,5 @@ class Model(private val prefs: SharedPreferences) {
 
     fun getCopyList(): List<Task> =
             taskList.map(Task::copy)
-
-    companion object {
-        private const val PREFS_TASK_LIST_KEY = "PREFS_TASK_LIST_KEY"
-        private const val PREFS_ID_KEY = "PREFS_ID_KEY"
-        private const val PREFS_EDITABLE_POSITION_KEY = "PREFS_EDITABLE_POSITION_KEY"
-    }
 }
 

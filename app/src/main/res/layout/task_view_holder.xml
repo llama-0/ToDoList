@@ -26,6 +26,8 @@
         android:layout_marginTop="@dimen/spacing_normal_16"
         android:layout_marginEnd="@dimen/spacing_text_end"
         android:layout_marginBottom="@dimen/spacing_normal_16"
+        android:ellipsize="end"
+        android:maxLines="3"
         android:textSize="@dimen/text_size_tittle"
         tools:text="Task tittle" />
 

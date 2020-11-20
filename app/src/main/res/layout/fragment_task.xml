@@ -8,5 +8,10 @@
     <TextView
         android:id="@+id/text_task_message"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/spacing_small_8"
+        android:elegantTextHeight="true"
+        android:textAlignment="inherit"
+        android:textSize="@dimen/font_normal_16"
+        tools:text="@string/text_holder_lorem_ipsum" />
 </FrameLayout>
