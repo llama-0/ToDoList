@@ -9,10 +9,13 @@ import ru.faizovr.todo.domain.model.Model
 import ru.faizovr.todo.domain.model.Task
 import ru.faizovr.todo.domain.model.TaskState
 
-
 class ModelTest {
 
     private val model = Model(mock())
+
+    companion object {
+        private const val TEST_MESSAGE = "Read Book"
+    }
 
     @Before
     fun before() {
@@ -22,86 +25,361 @@ class ModelTest {
     }
 
     @Test
-    fun testAddTask() {
-        model.addTask("TEST")
-        Assert.assertEquals(model.getMyList()[model.getMyList().size - 1].message, "TEST")
+    fun `AddTask new item added`() {
+        val myList: List<Task> = model.getMyList()
+        val initialSize = myList.size
+        val expectedSize = initialSize + 1
+        val expectedMessage = TEST_MESSAGE
+
+        model.addTask(TEST_MESSAGE)
+        val lastItem: Task = myList.last()
+        Assert.assertEquals(myList.size, expectedSize)
+        Assert.assertEquals(lastItem.message, expectedMessage)
     }
 
     @Test
-    fun testDeleteTask() {
-        model.deleteTask(model.getMyList().size)
-        Assert.assertEquals(model.getMyList()[model.getMyList().size - 1].message, "test 3")
+    fun `DeleteTask item deleted `() {
+        val myList: List<Task> = model.getMyList()
+        val initialSize = myList.size
+        val expectedSize = initialSize - 1
+        val deletedItem = myList[0]
+
+        model.deleteTask(0)
+        Assert.assertEquals(myList.size, expectedSize)
+        Assert.assertEquals(myList.contains(deletedItem), false)
     }
 
     @Test
-    fun testInvalidDeleteTask() {
-        val taskList: List<Task> = model.getMyList()
-        model.deleteTask(-1)
-        model.deleteTask(1000)
-        model.deleteTask(100000000)
-        Assert.assertEquals(model.getMyList(), taskList)
+    fun `DeleteTask with invalid params`() {
+        val myList: List<Task> = model.getMyList()
+        val initialSize = myList.size
+        val expectedSize = initialSize
+        val expectedList: List<Task> = model.getMyList()
+        val invalidElementPosition = myList.size
+
+        model.deleteTask(invalidElementPosition)
+        Assert.assertEquals(myList.size, expectedSize)
+        Assert.assertEquals(myList, expectedList)
     }
 
     @Test
-    fun testSwapTask() {
-        val first: Task? = model.getTaskFromPosition(0)
-        val last: Task? = model.getTaskFromPosition(1)
-        model.swapTask(0, 1)
-        Assert.assertEquals(model.getMyList()[0], last)
-        Assert.assertEquals(model.getMyList()[1], first)
-    }
-
-    @Test
-    fun testInvalidSwapTask() {
-        val taskList: List<Task> = model.getMyList()
-        model.swapTask(-1, -2)
-        model.swapTask(-1, 1)
-        model.swapTask(1, 1000)
-        model.swapTask(1, 1)
-        Assert.assertEquals(taskList, model.getMyList())
-    }
-
-    @Test
-    fun testSetTaskState() {
+    fun `DeleteTask delete editable task, and check editable position`() {
+        val myList: List<Task> = model.getMyList()
+        val initialSize = myList.size
+        val expectedSize = initialSize - 1
+        val deletedItem = myList[0]
+        val initialEditablePosition = 0
+        val expectedEditablePosition = -1
         model.setTaskState(0, TaskState.EDIT)
-        Assert.assertEquals(model.getMyList()[0].taskState, TaskState.EDIT)
+        model.deleteTask(0)
+        val actualEditablePosition = model.getEditableTaskPosition()
 
-        model.setTaskState(0, TaskState.COMPLETE)
-        Assert.assertEquals(model.getMyList()[0].taskState, TaskState.COMPLETE)
+        Assert.assertNotEquals(initialEditablePosition, actualEditablePosition)
+        Assert.assertEquals(actualEditablePosition, expectedEditablePosition)
+        Assert.assertEquals(myList.size, expectedSize)
+        Assert.assertEquals(myList.contains(deletedItem), false)
+    }
 
+    @Test
+    fun `SwapTask with two valid params`() {
+        val myList: List<Task> = model.getMyList()
+        val initialSize = myList.size
+        val expectedSize = initialSize
+        val firstItemPosition = 0
+        val secondItemPosition = 1
+        val expectedItemAtFirstPosition = myList[secondItemPosition]
+        val expectedItemAtSecondPosition = myList[firstItemPosition]
+
+        model.swapTask(firstItemPosition, secondItemPosition)
+        Assert.assertEquals(myList[firstItemPosition], expectedItemAtFirstPosition)
+        Assert.assertEquals(myList[secondItemPosition], expectedItemAtSecondPosition)
+        Assert.assertEquals(myList.size, expectedSize)
+    }
+
+    @Test
+    fun `SwapTask with first invalid param and second valid param`() {
+        val myList: List<Task> = model.getMyList()
+        val initialSize = myList.size
+        val expectedSize = initialSize
+        val invalidItemPosition = myList.size
+        val firstItemPosition = 0
+        val secondItemPosition = 1
+        val expectedItemAtFirstPosition = myList[firstItemPosition]
+        val expectedItemAtSecondPosition = myList[secondItemPosition]
+
+        model.swapTask(invalidItemPosition, secondItemPosition)
+
+        Assert.assertEquals(myList[firstItemPosition], expectedItemAtFirstPosition)
+        Assert.assertEquals(myList[secondItemPosition], expectedItemAtSecondPosition)
+        Assert.assertEquals(myList.size, expectedSize)
+    }
+
+    @Test
+    fun `SwapTask with first valid param and second invalid param`() {
+        val myList: List<Task> = model.getMyList()
+        val initialSize = myList.size
+        val expectedSize = initialSize
+        val invalidItemPosition = myList.size
+        val firstItemPosition = 0
+        val secondItemPosition = 1
+        val expectedItemAtFirstPosition = myList[firstItemPosition]
+        val expectedItemAtSecondPosition = myList[secondItemPosition]
+
+        model.swapTask(firstItemPosition, invalidItemPosition)
+
+        Assert.assertEquals(myList[firstItemPosition], expectedItemAtFirstPosition)
+        Assert.assertEquals(myList[secondItemPosition], expectedItemAtSecondPosition)
+        Assert.assertEquals(myList.size, expectedSize)
+    }
+
+    @Test
+    fun `SwapTask with both invalid params`() {
+        val myList: List<Task> = model.getMyList()
+        val initialSize = myList.size
+        val expectedSize = initialSize
+        val firstInvalidItemPosition = myList.size
+        val secondInvalidPosition = -1
+        val firstItemPosition = 0
+        val secondItemPosition = 1
+        val expectedItemAtFirstPosition = myList[firstItemPosition]
+        val expectedItemAtSecondPosition = myList[secondItemPosition]
+
+        model.swapTask(firstInvalidItemPosition, secondInvalidPosition)
+
+        Assert.assertEquals(myList[firstItemPosition], expectedItemAtFirstPosition)
+        Assert.assertEquals(myList[secondItemPosition], expectedItemAtSecondPosition)
+        Assert.assertEquals(myList.size, expectedSize)
+    }
+
+    @Test
+    fun `getEditableTaskPosition when list contain editable element`() {
+        val expectedTaskPosition = 0
+        model.setTaskState(0, TaskState.EDIT)
+        val editableTaskPosition = model.getEditableTaskPosition()
+
+        Assert.assertEquals(editableTaskPosition, expectedTaskPosition)
+    }
+
+    @Test
+    fun `getEditableTaskPosition when list doesn't contain editable element`() {
+        val expectedTaskPosition = -1
         model.setTaskState(0, TaskState.DEFAULT)
-        Assert.assertEquals(model.getMyList()[0].taskState, TaskState.DEFAULT)
+        val editableTaskPosition = model.getEditableTaskPosition()
+
+        Assert.assertEquals(editableTaskPosition, expectedTaskPosition)
     }
 
     @Test
-    fun testInvalidSetTaskState() {
-        val taskList: List<Task> = model.getMyList()
-        model.setTaskState(-1, TaskState.EDIT)
-        model.setTaskState(-100, TaskState.DEFAULT)
-        model.setTaskState(1000000, TaskState.COMPLETE)
-        Assert.assertEquals(model.getMyList(), taskList)
-    }
-
-    @Test
-    fun testGetEditableTaskPosition() {
+    fun `getEditableTaskMessage when list contain editable message`() {
+        val myList: List<Task> = model.getMyList()
+        val expectedTaskMessage = myList[0].message
         model.setTaskState(0, TaskState.EDIT)
-        Assert.assertEquals(model.getEditableTaskPosition(), 0)
-        model.setTaskState(0, TaskState.COMPLETE)
-        Assert.assertEquals(model.getEditableTaskPosition(), -1)
+        val editableTaskMessage = model.getEditableTaskMessage()
+
+        Assert.assertEquals(editableTaskMessage, expectedTaskMessage)
     }
 
     @Test
-    fun testGetEditableTaskMessage() {
-        model.setTaskState(0, TaskState.EDIT)
-        Assert.assertEquals(model.getEditableTaskMessage(), model.getTaskFromPosition(0)?.message)
-        model.setTaskState(0, TaskState.COMPLETE)
-        Assert.assertEquals(model.getEditableTaskMessage(), "")
+    fun `getEditableTaskMessage when list doesn't contain editable element`() {
+        val expectedTaskMessage = ""
+        model.setTaskState(0, TaskState.DEFAULT)
+        val editableTaskMessage = model.getEditableTaskMessage()
+
+        Assert.assertEquals(editableTaskMessage, expectedTaskMessage)
     }
 
     @Test
-    fun testGetTaskFromPosition() {
-        Assert.assertEquals(model.getTaskFromPosition(-1), null)
-        Assert.assertEquals(model.getTaskFromPosition(0), model.getMyList()[0])
+    fun `setTaskState from EDIT to EDIT`() {
+        val myList: List<Task> = model.getMyList()
+        val testingTaskPosition = 0
+        val task = myList[testingTaskPosition]
+        task.taskState = TaskState.EDIT
+        val expectedTaskState = TaskState.EDIT
+
+        model.setTaskState(testingTaskPosition, expectedTaskState)
+
+        val actualTaskState = task.taskState
+        Assert.assertEquals(actualTaskState, expectedTaskState)
     }
 
+
+    @Test
+    fun `setTaskState from EDIT to COMPLETE`() {
+        val myList: List<Task> = model.getMyList()
+        val testingTaskPosition = 0
+        val task = myList[testingTaskPosition]
+        task.taskState = TaskState.EDIT
+        val expectedTaskState = TaskState.COMPLETE
+
+        model.setTaskState(testingTaskPosition, expectedTaskState)
+
+        val actualTaskState = task.taskState
+        Assert.assertEquals(actualTaskState, expectedTaskState)
+    }
+
+    @Test
+    fun `setTaskState from EDIT to DEFAULT`() {
+        val myList: List<Task> = model.getMyList()
+        val testingTaskPosition = 0
+        val task = myList[testingTaskPosition]
+        task.taskState = TaskState.EDIT
+        val expectedTaskState = TaskState.DEFAULT
+
+        model.setTaskState(testingTaskPosition, expectedTaskState)
+
+        val actualTaskState = task.taskState
+        Assert.assertEquals(actualTaskState, expectedTaskState)
+    }
+
+    @Test
+    fun `setTaskState from DEFAULT to DEFAULT`() {
+        val myList: List<Task> = model.getMyList()
+        val testingTaskPosition = 0
+        val task = myList[testingTaskPosition]
+        task.taskState = TaskState.DEFAULT
+        val expectedTaskState = TaskState.DEFAULT
+
+        model.setTaskState(testingTaskPosition, expectedTaskState)
+
+        val actualTaskState = task.taskState
+        Assert.assertEquals(actualTaskState, expectedTaskState)
+    }
+
+    @Test
+    fun `setTaskState from DEFAULT to EDIT`() {
+        val myList: List<Task> = model.getMyList()
+        val testingTaskPosition = 0
+        val task = myList[testingTaskPosition]
+        task.taskState = TaskState.DEFAULT
+        val expectedTaskState = TaskState.EDIT
+
+        model.setTaskState(testingTaskPosition, expectedTaskState)
+
+        val actualTaskState = task.taskState
+        Assert.assertEquals(actualTaskState, expectedTaskState)
+    }
+
+    @Test
+    fun `setTaskState from DEFAULT to COMPLETE`() {
+        val myList: List<Task> = model.getMyList()
+        val testingTaskPosition = 0
+        val task = myList[testingTaskPosition]
+        task.taskState = TaskState.DEFAULT
+        val expectedTaskState = TaskState.COMPLETE
+
+        model.setTaskState(testingTaskPosition, expectedTaskState)
+
+        val actualTaskState = task.taskState
+        Assert.assertEquals(actualTaskState, expectedTaskState)
+    }
+
+    @Test
+    fun `setTaskState from COMPLETE to COMPLETE`() {
+        val myList: List<Task> = model.getMyList()
+        val testingTaskPosition = 0
+        val task = myList[testingTaskPosition]
+        task.taskState = TaskState.COMPLETE
+        val expectedTaskState = TaskState.COMPLETE
+
+        model.setTaskState(testingTaskPosition, expectedTaskState)
+
+        val actualTaskState = task.taskState
+        Assert.assertEquals(actualTaskState, expectedTaskState)
+    }
+
+    @Test
+    fun `setTaskState from COMPLETE to DEFAULT`() {
+        val myList: List<Task> = model.getMyList()
+        val testingTaskPosition = 0
+        val task = myList[testingTaskPosition]
+        task.taskState = TaskState.COMPLETE
+        val expectedTaskState = TaskState.DEFAULT
+
+        model.setTaskState(testingTaskPosition, expectedTaskState)
+
+        val actualTaskState = task.taskState
+        Assert.assertEquals(actualTaskState, expectedTaskState)
+    }
+
+    @Test
+    fun `setTaskState from COMPLETE to EDIT`() {
+        val myList: List<Task> = model.getMyList()
+        val testingTaskPosition = 0
+        val task = myList[testingTaskPosition]
+        task.taskState = TaskState.COMPLETE
+        val expectedTaskState = TaskState.EDIT
+
+        model.setTaskState(testingTaskPosition, expectedTaskState)
+
+        val actualTaskState = task.taskState
+        Assert.assertEquals(actualTaskState, expectedTaskState)
+    }
+
+    @Test
+    fun `testSetTaskState from SOME to EDIT test that editable position changed`() {
+        val initialTaskState = TaskState.DEFAULT
+        val taskPosition = 0
+        model.setTaskState(taskPosition, initialTaskState)
+        val initialEditablePosition = model.getEditableTaskPosition()
+        val editableTaskState = TaskState.EDIT
+        model.setTaskState(taskPosition, editableTaskState)
+
+        val actualEditablePosition = model.getEditableTaskPosition()
+
+        Assert.assertNotEquals(initialEditablePosition, actualEditablePosition)
+        Assert.assertEquals(taskPosition, actualEditablePosition)
+    }
+
+    @Test
+    fun `testSetTaskState from EDIT to SOME test that editable position changed`() {
+        val expectedEditablePosition = -1
+        val taskPosition = 0
+        val initialTaskState = TaskState.EDIT
+        model.setTaskState(taskPosition, initialTaskState)
+        val initialEditablePosition = model.getEditableTaskPosition()
+
+        Assert.assertEquals(taskPosition, initialEditablePosition)
+
+        val expectedTaskState = TaskState.DEFAULT
+        model.setTaskState(taskPosition, expectedTaskState)
+
+        val actualEditablePosition = model.getEditableTaskPosition()
+
+        Assert.assertNotEquals(initialEditablePosition, actualEditablePosition)
+        Assert.assertEquals(actualEditablePosition, expectedEditablePosition)
+    }
+
+    @Test
+    fun `setTaskMessage with valid params`() {
+        val myList = model.getMyList()
+        val initialTask = myList.first()
+        val initialMessage = initialTask.message
+        val expectedMessage = "Message updated"
+        val taskPosition = 0
+
+        model.setTaskMessage(taskPosition, expectedMessage)
+        val actualMessage = model.getMyList().first().message
+
+        Assert.assertNotEquals(initialMessage, actualMessage)
+        Assert.assertEquals(actualMessage, expectedMessage)
+    }
+
+    @Test
+    fun `getTaskFromPosition with valid param`() {
+        val myList = model.getMyList()
+        val testingTask = myList.first()
+        val testingPosition = 0
+
+        val actualTask = model.getTaskFromPosition(testingPosition)
+        Assert.assertEquals(actualTask, testingTask)
+    }
+
+    @Test
+    fun `getTaskFromPosition with invalid param`() {
+        val testingTask = null
+        val testingPosition = -1
+
+        val actualTask = model.getTaskFromPosition(testingPosition)
+        Assert.assertEquals(actualTask, testingTask)
+    }
 }
