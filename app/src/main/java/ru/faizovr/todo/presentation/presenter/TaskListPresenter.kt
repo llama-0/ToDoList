@@ -1,5 +1,6 @@
 package ru.faizovr.todo.presentation.presenter
 
+import androidx.annotation.VisibleForTesting
 import ru.faizovr.todo.domain.model.Model
 import ru.faizovr.todo.domain.model.Task
 import ru.faizovr.todo.domain.model.TaskState
@@ -170,7 +171,8 @@ class TaskListPresenter(
         }
     }
 
-    private fun showContent() {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun showContent() {
         updateList()
         setupButtonLogic()
         setupToDoTaskInputText()
