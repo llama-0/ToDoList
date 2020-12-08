@@ -10,6 +10,8 @@ class RepositoryImplementation(private val sharedPreferences: SharedPreferences)
 
     override fun getListFromSharedPreference(): List<Task> {
         val jsonString = sharedPreferences.getString(PREFS_TASK_LIST_KEY, "")
+        if (jsonString?.isEmpty() == true)
+            return mutableListOf()
         val type = object : TypeToken<List<Task>>() {}.type
         return Gson().fromJson<MutableList<Task>>(jsonString, type)
     }
