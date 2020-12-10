@@ -1,15 +1,20 @@
 package ru.faizovr.todo.presentation.presenter
 
+import ru.faizovr.todo.domain.model.Model
 import ru.faizovr.todo.presentation.contract.TaskContract
-import ru.faizovr.todo.presentation.viewholder.TaskDataView
 
 class TaskPresenter(
         private val view: TaskContract.View,
-        private val taskDataView: TaskDataView
+        private val model: Model
 ) : TaskContract.Presenter {
 
-    override fun init() {
-        val message = taskDataView.message
-        view.showTaskMessage(message)
+    override fun init(taskId: Long?) {
+        if (taskId != null) {
+            val task = model.getTaskById(taskId)
+            val message = task?.message
+            if (message != null) {
+                view.showTaskMessage(message)
+            }
+        }
     }
 }

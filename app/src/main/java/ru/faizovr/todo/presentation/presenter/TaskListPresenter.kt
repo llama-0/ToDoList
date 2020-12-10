@@ -1,6 +1,7 @@
 package ru.faizovr.todo.presentation.presenter
 
 import androidx.annotation.VisibleForTesting
+import ru.faizovr.todo.R
 import ru.faizovr.todo.domain.model.Model
 import ru.faizovr.todo.domain.model.Task
 import ru.faizovr.todo.domain.model.TaskState
@@ -18,6 +19,21 @@ class TaskListPresenter(
     private var addTextString: String = ""
     private var editTextString: String = ""
     private var inputState: InputState = InputState.ADD
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun setAddTextString(message: String) {
+        addTextString = message
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun setEditTextString(message: String) {
+        editTextString = message
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun setInputState(inputState: InputState) {
+        this.inputState = inputState
+    }
 
     override fun init() {
         view.setFuncToMainButton()
@@ -67,16 +83,14 @@ class TaskListPresenter(
     }
 
     private fun setupButtonLogic() {
-        val alpha: Float
-        if (inputState == InputState.ADD) {
-            view.setMainButtonClickable(addTextString.isNotEmpty())
-            alpha = if (addTextString.isNotEmpty()) 1F else 0.5F
-            view.setMainButtonAlpha(alpha)
+        val isStringNotEmpty: Boolean = if (inputState == InputState.ADD) {
+            addTextString.isNotEmpty()
         } else {
-            view.setMainButtonClickable(editTextString.isNotEmpty())
-            alpha = if (editTextString.isNotEmpty()) 1F else 0.5F
-            view.setMainButtonAlpha(alpha)
+            editTextString.isNotEmpty()
         }
+        val alpha = if (isStringNotEmpty) R.dimen.alpha_default.toFloat() else R.dimen.alpha_default.toFloat()
+        view.setMainButtonClickable(isStringNotEmpty)
+        view.setMainButtonAlpha(alpha)
     }
 
     private fun changeButtonText() {
@@ -143,8 +157,7 @@ class TaskListPresenter(
     override fun onTaskClickedForPosition(position: Int) {
         val taskFromPosition = model.getTaskFromPosition(position)
         if (taskFromPosition != null) {
-            val taskDataView = taskMapper.mapFromEntity(taskFromPosition)
-            view.showTaskFragment(taskDataView)
+            view.showTaskFragment(taskFromPosition.id)
         }
     }
 
@@ -171,11 +184,11 @@ class TaskListPresenter(
         }
     }
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun showContent() {
+    private fun showContent() {
         updateList()
         setupButtonLogic()
         setupToDoTaskInputText()
         changeButtonText()
     }
+
 }

@@ -15,7 +15,7 @@ interface TaskListContract {
         fun setAddTextToMainButton()
         fun setEditTextToMainButton()
         fun clearEditText()
-        fun showTaskFragment(taskDataView: TaskDataView)
+        fun showTaskFragment(id: Long)
     }
 
     interface Presenter {

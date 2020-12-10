@@ -34,6 +34,9 @@ class Model(private val repository: Repository) {
         taskList.add(newTask)
     }
 
+    fun getTaskById(id: Long): Task? =
+            taskList.find { it.id == id }
+
     private fun swapEditableTask(fromPosition: Int, toPosition: Int) {
         if (taskList[fromPosition].taskState == TaskState.EDIT) {
             editablePosition = toPosition

@@ -7,6 +7,6 @@ interface TaskContract {
     }
 
     interface Presenter {
-        fun init()
+        fun init(taskId: Long?)
     }
 }

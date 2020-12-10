@@ -9,8 +9,8 @@ import kotlinx.android.synthetic.main.fragment_to_do_list.*
 import ru.faizovr.todo.R
 import ru.faizovr.todo.ToDoApplication
 import ru.faizovr.todo.presentation.activity.ToDoActivity
-import ru.faizovr.todo.presentation.contract.TaskListContract
 import ru.faizovr.todo.presentation.adapter.ToDoTaskAdapter
+import ru.faizovr.todo.presentation.contract.TaskListContract
 import ru.faizovr.todo.presentation.presenter.TaskListPresenter
 import ru.faizovr.todo.presentation.textwatcher.MessageInputTextWatcher
 import ru.faizovr.todo.presentation.touchhelper.TaskTouchHelper
@@ -33,7 +33,7 @@ class TaskListFragment : Fragment(R.layout.fragment_to_do_list), TaskListContrac
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        (activity as ToDoActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
         setupViews()
         setupPresenter()
         setupHelpers()
@@ -54,12 +54,17 @@ class TaskListFragment : Fragment(R.layout.fragment_to_do_list), TaskListContrac
         lists_recycler_view.adapter = ToDoTaskAdapter(onEditButtonClicked, onCheckBoxClicked, onTaskClicked)
     }
 
-    override fun showTaskFragment(taskDataView: TaskDataView) {
-        val fragment: Fragment = TaskFragment(taskDataView)
-        activity?.let {
-            if (it is ToDoActivity)
-                it.goToFragment(fragment)
-        }
+    override fun showTaskFragment(id: Long) {
+        val bundle = Bundle()
+        bundle.putLong(TaskFragment.TASK_ID_KEY, id)
+        val fragment: Fragment = TaskFragment()
+        fragment.arguments = bundle
+
+        fragmentManager
+                ?.beginTransaction()
+                ?.replace(R.id.main_fragment_container, fragment)
+                ?.addToBackStack(TaskFragment.FRAGMENT_TAG)
+                ?.commit()
     }
 
     private fun setupHelpers() {

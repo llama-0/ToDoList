@@ -1,47 +1,35 @@
 package ru.faizovr.todo.presentation.presenter
 
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.mockingDetails
 import com.nhaarman.mockitokotlin2.verify
-import org.junit.Assert
 import org.junit.Test
 import ru.faizovr.todo.domain.model.Model
 import ru.faizovr.todo.domain.model.TaskState
 import ru.faizovr.todo.presentation.InputState
 import ru.faizovr.todo.presentation.contract.TaskListContract
-import java.lang.reflect.Field
+import ru.faizovr.todo.presentation.mapper.TaskMapper
 
 class PresenterTest {
 
     private val model: Model = mock()
     private val view: TaskListContract.View = mock()
-    private val taskListPresenter = TaskListPresenter(view, model)
-    private lateinit var fieldInputState: Field
-    private lateinit var fieldAddTextString: Field
-    private lateinit var fieldEditTextString: Field
+    private val taskMapper: TaskMapper = mock()
+    private val taskListPresenter = TaskListPresenter(view, model, taskMapper)
 
     private fun setAddInputState() {
-        fieldInputState = taskListPresenter.javaClass.getDeclaredField("inputState")
-        fieldInputState.isAccessible = true
-        fieldInputState.set(taskListPresenter, InputState.ADD)
+        taskListPresenter.setInputState(InputState.ADD)
     }
 
     private fun setEditInputState() {
-        fieldInputState = taskListPresenter.javaClass.getDeclaredField("inputState")
-        fieldInputState.isAccessible = true
-        fieldInputState.set(taskListPresenter, InputState.EDIT)
+        taskListPresenter.setInputState(InputState.EDIT)
     }
 
     private fun setMessageToAddTextString(message: String) {
-        fieldAddTextString = taskListPresenter.javaClass.getDeclaredField("addTextString")
-        fieldAddTextString.isAccessible = true
-        fieldAddTextString.set(taskListPresenter, message)
+        taskListPresenter.setAddTextString(message)
     }
 
     private fun setMessageToEditTextString(message: String) {
-        fieldEditTextString = taskListPresenter.javaClass.getDeclaredField("editTextString")
-        fieldEditTextString.isAccessible = true
-        fieldEditTextString.set(taskListPresenter, message)
+        taskListPresenter.setEditTextString(message)
     }
 
     @Test

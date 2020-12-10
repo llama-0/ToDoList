@@ -22,4 +22,7 @@
     <dimen name="spacing_text_end">64dp</dimen>
     <dimen name="spacing_very_huge">48dp</dimen>
     <dimen name="text_size_tittle">20sp</dimen>
+
+    <item name="alpha_default" format="float" type="dimen">1.0</item>
+    <item name="alpha_half" format="float" type="dimen">0.5</item>
 </resources>
