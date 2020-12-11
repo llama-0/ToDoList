@@ -4,8 +4,9 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class TaskDataView(val isCheckBoxActive: Boolean,
-                        val id: Long,
-                        val message: String,
-                        val editButtonImageId: Int
+data class TaskDataView(
+    val isCheckBoxActive: Boolean,
+    val id: Long,
+    val message: String,
+    val editButtonImageId: Int
 ) : Parcelable

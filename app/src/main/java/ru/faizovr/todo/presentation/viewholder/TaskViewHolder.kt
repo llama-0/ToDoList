@@ -14,7 +14,8 @@ class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun setState(isChecked: Boolean) {
         itemView.checkbox_is_complete.isChecked = isChecked
         if (isChecked) {
-            itemView.text_task.paintFlags = itemView.text_task.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            itemView.text_task.paintFlags =
+                itemView.text_task.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
         } else {
             itemView.text_task.paintFlags = 0
         }
@@ -25,10 +26,10 @@ class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
 
     fun setOnClickListeners(
-            onEditButtonClickListener: (position: Int) -> Unit,
-            onCheckBoxClickListener: (position: Int) -> Unit,
-            onTaskClickListener: (position: Int) -> Unit,
-            position: Int
+        onEditButtonClickListener: (position: Int) -> Unit,
+        onCheckBoxClickListener: (position: Int) -> Unit,
+        onTaskClickListener: (position: Int) -> Unit,
+        position: Int
     ) {
         itemView.button_edit_task.setOnClickListener {
             onEditButtonClickListener(position)
@@ -42,15 +43,20 @@ class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
 
     fun bind(
-            task: TaskDataView,
-            position: Int,
-            onEditButtonClickListener: (position: Int) -> Unit,
-            onCheckBoxClickListener: (position: Int) -> Unit,
-            onTaskClickListener: (position: Int) -> Unit
+        task: TaskDataView,
+        position: Int,
+        onEditButtonClickListener: (position: Int) -> Unit,
+        onCheckBoxClickListener: (position: Int) -> Unit,
+        onTaskClickListener: (position: Int) -> Unit
     ) {
         setState(task.isCheckBoxActive)
         setMessage(task.message)
         setImage(task.editButtonImageId)
-        setOnClickListeners(onEditButtonClickListener, onCheckBoxClickListener, onTaskClickListener, position)
+        setOnClickListeners(
+            onEditButtonClickListener,
+            onCheckBoxClickListener,
+            onTaskClickListener,
+            position
+        )
     }
 }

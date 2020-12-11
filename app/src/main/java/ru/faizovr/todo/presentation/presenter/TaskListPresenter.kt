@@ -11,9 +11,9 @@ import ru.faizovr.todo.presentation.mapper.TaskMapper
 import ru.faizovr.todo.presentation.viewholder.TaskDataView
 
 class TaskListPresenter(
-        private val view: TaskListContract.View,
-        private val model: Model,
-        private val taskMapper: TaskMapper = TaskMapper()
+    private val view: TaskListContract.View,
+    private val model: Model,
+    private val taskMapper: TaskMapper = TaskMapper()
 ) : TaskListContract.Presenter {
 
     private var addTextString: String = ""
@@ -54,6 +54,10 @@ class TaskListPresenter(
         }
     }
 
+//    private fun restoreTask(position: Int, id: Long) {
+//        model.restoreTask(position, id)
+//    }
+
     override fun listItemMoved(fromPosition: Int, toPosition: Int) {
         model.swapTask(fromPosition, toPosition)
         showContent()
@@ -67,6 +71,11 @@ class TaskListPresenter(
         deleteTask(position)
         showContent()
     }
+
+//    override fun undoListItemSwiped(position: Int, id: Long) {
+//        restoreTask(position, id)
+//        showContent()
+//    }
 
     override fun onMainButtonClicked() {
         if (inputState == InputState.ADD) {
@@ -88,7 +97,8 @@ class TaskListPresenter(
         } else {
             editTextString.isNotEmpty()
         }
-        val alpha = if (isStringNotEmpty) R.dimen.alpha_default.toFloat() else R.dimen.alpha_default.toFloat()
+        val alpha =
+            if (isStringNotEmpty) R.dimen.alpha_default.toFloat() else R.dimen.alpha_default.toFloat()
         view.setMainButtonClickable(isStringNotEmpty)
         view.setMainButtonAlpha(alpha)
     }
@@ -168,7 +178,7 @@ class TaskListPresenter(
 
     private fun updateList() {
         val taskList: List<TaskDataView> = model.getCopyList()
-                .map(taskMapper::mapFromEntity)
+            .map(taskMapper::mapFromEntity)
         if (taskList.isNotEmpty()) {
             showList(taskList)
         } else {

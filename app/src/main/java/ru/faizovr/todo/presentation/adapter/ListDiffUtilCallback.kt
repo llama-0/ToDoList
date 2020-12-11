@@ -4,14 +4,17 @@ import android.os.Bundle
 import androidx.recyclerview.widget.DiffUtil
 import ru.faizovr.todo.presentation.viewholder.TaskDataView
 
-class ListDiffUtilCallback(private val oldList: List<TaskDataView>, private val newList: List<TaskDataView>) : DiffUtil.Callback() {
+class ListDiffUtilCallback(
+    private val oldList: List<TaskDataView>,
+    private val newList: List<TaskDataView>
+) : DiffUtil.Callback() {
 
     override fun getOldListSize(): Int = oldList.size
 
     override fun getNewListSize(): Int = newList.size
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-            oldList[oldItemPosition].id == newList[newItemPosition].id
+        oldList[oldItemPosition].id == newList[newItemPosition].id
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean = when {
         oldList[oldItemPosition].isCheckBoxActive == newList[newItemPosition].isCheckBoxActive -> false

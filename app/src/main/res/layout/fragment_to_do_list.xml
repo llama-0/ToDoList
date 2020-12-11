@@ -10,8 +10,11 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/edit_text_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/spacing_normal_16"
+        app:endIconMode="clear_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -19,10 +22,9 @@
             android:id="@+id/edit_text_add"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/spacing_normal_16"
             android:hint="@string/hint_add_task"
             android:inputType="textMultiLine"
-            android:lines="5"
+            android:lines="4"
             android:scrollbars="vertical" />
 
     </com.google.android.material.textfield.TextInputLayout>

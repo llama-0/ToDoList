@@ -27,7 +27,7 @@ class Model(private val repository: Repository) {
     }
 
     fun getMyList(): List<Task> =
-            taskList
+        taskList
 
     fun addTask(message: String) {
         val newTask = Task(id++, message)
@@ -35,7 +35,7 @@ class Model(private val repository: Repository) {
     }
 
     fun getTaskById(id: Long): Task? =
-            taskList.find { it.id == id }
+        taskList.find { it.id == id }
 
     private fun swapEditableTask(fromPosition: Int, toPosition: Int) {
         if (taskList[fromPosition].taskState == TaskState.EDIT) {
@@ -55,13 +55,13 @@ class Model(private val repository: Repository) {
     }
 
     fun getEditableTaskPosition(): Int =
-            editablePosition
+        editablePosition
 
     fun getEditableTaskMessage(): String =
-            if (getEditableTaskPosition() in 0 until taskList.size)
-                taskList[getEditableTaskPosition()].message
-            else
-                ""
+        if (getEditableTaskPosition() in 0 until taskList.size)
+            taskList[getEditableTaskPosition()].message
+        else
+            ""
 
     fun setTaskState(position: Int, taskState: TaskState) {
         if (position in 0 until taskList.size) {
@@ -76,9 +76,26 @@ class Model(private val repository: Repository) {
     fun deleteTask(position: Int) {
         if (editablePosition == position)
             editablePosition = -1
-        if (position in 0 until taskList.size)
+        if (position in 0 until taskList.size) {
+            // cache this 1 task
+//            getTaskFromPosition(position)?.let {
+//                repository.saveDeletedTaskToSharedPreference(it)
+//                repository.saveDeletedTaskIdToSharedPreference(it.id)
+//            }
+            // delete this 1 task
             taskList.removeAt(position)
+        }
     }
+
+//    fun restoreTask(position: Int, id: Long) {
+//        // restore task
+//        taskList[position] = repository.getDeletedTaskFromSharedPreference()
+//        // delete task from shared prefs
+////        val taskIdFromPrefs = repository.getDeletedTaskIdFromSharedPreference()
+//        repository.removeDeletedTaskIdFromSharedPreference(id)
+//        val taskFromPrefs = repository.getDeletedTaskFromSharedPreference()
+//        repository.removeDeletedTaskFromSharedPreference(taskFromPrefs)
+//    }
 
     fun setTaskMessage(position: Int, message: String) {
         if (position in 0 until taskList.size)
@@ -86,12 +103,12 @@ class Model(private val repository: Repository) {
     }
 
     fun getTaskFromPosition(position: Int): Task? =
-            if (position in 0 until taskList.size)
-                taskList[position]
-            else
-                null
+        if (position in 0 until taskList.size)
+            taskList[position]
+        else
+            null
 
     fun getCopyList(): List<Task> =
-            taskList.map(Task::copy)
+        taskList.map(Task::copy)
 }
 

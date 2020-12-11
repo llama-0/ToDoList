@@ -51,7 +51,8 @@ class TaskListFragment : Fragment(R.layout.fragment_to_do_list), TaskListContrac
     }
 
     private fun setupViews() {
-        lists_recycler_view.adapter = ToDoTaskAdapter(onEditButtonClicked, onCheckBoxClicked, onTaskClicked)
+        lists_recycler_view.adapter =
+            ToDoTaskAdapter(onEditButtonClicked, onCheckBoxClicked, onTaskClicked)
     }
 
     override fun showTaskFragment(id: Long) {
@@ -61,17 +62,17 @@ class TaskListFragment : Fragment(R.layout.fragment_to_do_list), TaskListContrac
         fragment.arguments = bundle
 
         fragmentManager
-                ?.beginTransaction()
-                ?.replace(R.id.main_fragment_container, fragment)
-                ?.addToBackStack(TaskFragment.FRAGMENT_TAG)
-                ?.commit()
+            ?.beginTransaction()
+            ?.replace(R.id.main_fragment_container, fragment)
+            ?.addToBackStack(TaskFragment.FRAGMENT_TAG)
+            ?.commit()
     }
 
     private fun setupHelpers() {
         if (taskListPresenter != null) {
             val messageInputTextWatcher = MessageInputTextWatcher(taskListPresenter!!)
             edit_text_add.addTextChangedListener(messageInputTextWatcher)
-            val taskTouchHelper = TaskTouchHelper(taskListPresenter!!)
+            val taskTouchHelper = TaskTouchHelper(taskListPresenter!!, context!!)
             val itemTouchHelper = ItemTouchHelper(taskTouchHelper)
             itemTouchHelper.attachToRecyclerView(lists_recycler_view)
         }

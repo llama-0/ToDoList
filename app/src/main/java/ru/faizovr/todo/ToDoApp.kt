@@ -17,7 +17,8 @@ class ToDoApplication : Application() {
     }
 
     private fun setupModel() {
-        val sharedPreferences: SharedPreferences = getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
+        val sharedPreferences: SharedPreferences =
+            getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
         val repository = RepositoryImplementation(sharedPreferences)
         model = Model(repository)
     }
